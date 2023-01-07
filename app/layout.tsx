@@ -13,7 +13,7 @@ export default function RootLayout({
       */}
       <head />
       <body className="bg-gradient-to-b from-gray-dark to-gray text-white tracking-tighter">
-        <nav className="flex justify-around items-center border-b-4 border-green mb-16 h-20 [&>a]:text-3xl [&>a]:font-bold [&>a]:text-gray-light">
+        <nav className="flex justify-start gap-5 pl-5 mb-16 h-20 items-center border-b-4 border-green [&>a]:text-3xl [&>a]:font-bold [&>a]:text-gray-light">
           <a className="hover:text-white ease-in-out">pluc</a>
           <a className="hover:text-white ease-in-out">coming soon</a>
           <a className="hover:text-white ease-in-out">about</a>
