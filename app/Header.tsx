@@ -15,9 +15,7 @@ export default function Header({ links }: HeaderProps) {
       href={link.link}
       // TODO: having this as a flexbox is a little jank
       className={`${
-        active === link.link
-          ? "text-white border-b-8 border-green bg-gray"
-          : "text-gray-light"
+        active === link.link ? "text-gray bg-green" : "text-white"
       } flex justify-center items-center h-full px-4 text-2xl font-bold`}
       onClick={(event) => {
         event.preventDefault();
