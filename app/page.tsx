@@ -1,6 +1,4 @@
-import { Inter } from "@next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import SearchOrLogin from "./Components/SearchOrLogin";
 
 export default function Home() {
   return (
@@ -12,10 +10,8 @@ export default function Home() {
         <span>Remove the duplicates</span> from your playlists that Spotify
         missed (or keep them, we won't tell)
       </h2>
-      <input
-        className="h-14 w-1/2 rounded-full text-2xl text-gray-dark align-center pl-5 pr-5 shadow-lg shadow-green"
-        placeholder="Find a playlist"
-      />
+      {/* SearchOrLogin contains state and is a client component */}
+      <SearchOrLogin />
     </main>
   );
 }
