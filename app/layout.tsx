@@ -1,9 +1,11 @@
-import './globals.css'
+import "./globals.css";
+import Header from "./Components/Header";
+import ProvidersWrapper from "./Components/ProvidersWrapper";
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -12,7 +14,21 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body>{children}</body>
+      <body className="bg-gradient-to-b from-gray-dark to-gray text-white tracking-tighter">
+        <Header
+          links={[
+            { label: "pluc", link: "/" },
+            { label: "coming soon", link: "/coming_soon" },
+            { label: "about", link: "/about" },
+          ]}
+        />
+
+        {/*
+          expose session context to children
+          TODO: reduce scope once we get this working well
+        */}
+        <ProvidersWrapper>{children}</ProvidersWrapper>
+      </body>
     </html>
-  )
+  );
 }
