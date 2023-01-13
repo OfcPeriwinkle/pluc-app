@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+
 import Login from "./Login";
 import Search from "./Search";
 
 export default function SearchOrLogin() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { data: session } = useSession();
+  console.log(session);
 
-  // Toggle search bar or login button based on auth status
-  return isLoggedIn ? <Search /> : <Login hasSignedIn={setIsLoggedIn} />;
+  return session ? <Search /> : <Login />;
 }

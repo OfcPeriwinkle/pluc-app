@@ -1,24 +1,14 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { signIn } from "next-auth/react";
 
-interface LoginProps {
-  hasSignedIn: Dispatch<SetStateAction<boolean>>;
-}
-
-function authenticate() {
-  // TODO: Spotify authentication!
-  return true;
-}
-
-export default function Login({ hasSignedIn }: LoginProps) {
+export default function Login() {
   return (
     <div>
       <button
         className="rounded-full bg-green font-medium text-xl p-4 hover:scale-105"
-        onClick={(event) => {
-          event.preventDefault();
-          hasSignedIn(authenticate());
+        onClick={() => {
+          signIn("spotify");
         }}
       >
         Login with Spotify

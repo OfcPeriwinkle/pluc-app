@@ -1,5 +1,6 @@
 import "./globals.css";
 import Header from "./Components/Header";
+import ProvidersWrapper from "./Components/ProvidersWrapper";
 
 export default function RootLayout({
   children,
@@ -21,7 +22,12 @@ export default function RootLayout({
             { label: "about", link: "/about" },
           ]}
         />
-        {children}
+
+        {/*
+          expose session context to children
+          TODO: reduce scope once we get this working well
+        */}
+        <ProvidersWrapper>{children}</ProvidersWrapper>
       </body>
     </html>
   );
