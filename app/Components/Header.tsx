@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 interface HeaderProps {
   links: { link: string; label: string }[];
@@ -16,8 +16,8 @@ export default function Header({ links }: HeaderProps) {
       // TODO: having this as a flexbox is a little jank
       className={`${
         active === link.link
-          ? "text-gray bg-green "
-          : "text-white hover:text-gray-light"
+          ? 'text-gray bg-green '
+          : 'text-white hover:text-gray-light'
       } flex justify-center items-center h-full px-4 text-2xl font-bold`}
       onClick={(event) => {
         event.preventDefault();

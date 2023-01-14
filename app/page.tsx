@@ -1,4 +1,4 @@
-import SearchOrLogin from "./Components/SearchOrLogin";
+import SearchOrLogin from './Components/SearchOrLogin';
 
 export default function Home() {
   return (
