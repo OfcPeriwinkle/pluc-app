@@ -6,7 +6,7 @@ const client_secret = process.env.SPOTIFY_SECRET;
 const basic_authorization = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 
 /** Use a refresh_token to acquire a new access_token */
-async function get_access_token(refresh_token: string) {
+export async function get_access_token(refresh_token: string) {
   const res = await fetch(TOKEN_ENDPOINT, {
     method: 'POST',
     headers: {
@@ -33,6 +33,10 @@ export async function get_user_details(access_token: string) {
     },
   });
 
+  if (res.status === 401) {
+    return null;
+  }
+
   return res.json();
 }
 
@@ -46,6 +50,10 @@ export async function search_for_playlist(access_token: string, playlist_name: s
       },
     }
   );
+
+  if (res.status === 401) {
+    return null;
+  }
 
   return res.json();
 }

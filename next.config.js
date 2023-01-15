@@ -4,7 +4,7 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: 'i.scdn.co', port: '', pathname: '/image/**' }],
+    remotePatterns: [{ protocol: 'https', hostname: '**.scdn.co', port: '', pathname: '/**' }],
   },
 };
 

@@ -25,6 +25,7 @@ const authOptions: AuthOptions = {
     },
     async session({ session, token }) {
       session.access_token = token.access_token;
+      session.refresh_token = token.refresh_token;
       return session;
     },
   },

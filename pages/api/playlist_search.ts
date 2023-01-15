@@ -24,5 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Search for playlist name
   const search_results = await search_for_playlist(session.access_token, playlist_name);
 
-  return res.status(200).json({ playlists: search_results });
+  if (search_results === null) {
+    return res.status(401).json({ error: 'The access_token expired' });
+  }
+
+  return res.status(200).json({ search_results });
 }
