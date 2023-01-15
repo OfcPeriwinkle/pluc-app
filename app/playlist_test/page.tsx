@@ -13,7 +13,7 @@ export default function PlaylistTest() {
   });
 
   return (
-    <>
+    <div className="flex flex-wrap justify-center items-center gap-10 p-14">
       {processed_playlists.map((playlist_details) => {
         return (
           <PlaylistCard
@@ -24,6 +24,6 @@ export default function PlaylistTest() {
           ></PlaylistCard>
         );
       })}
-    </>
+    </div>
   );
 }
