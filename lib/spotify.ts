@@ -6,7 +6,7 @@ const client_secret = process.env.SPOTIFY_SECRET;
 const basic_authorization = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
 
 /** Use a refresh_token to acquire a new access_token */
-export async function get_access_token(refresh_token: string) {
+export async function get_access_token(active_refresh_token: string) {
   const res = await fetch(TOKEN_ENDPOINT, {
     method: 'POST',
     headers: {
@@ -15,12 +15,14 @@ export async function get_access_token(refresh_token: string) {
     },
     body: new URLSearchParams({
       grant_type: 'refresh_token',
-      refresh_token,
+      active_refresh_token,
     }),
   });
 
-  const { access_token } = await res.json();
-  return access_token;
+  // Spotify does not always supply a new refresh token, get new access_token details and default
+  // to old refresh_token if a new one was not provided
+  const { access_token, expires_at, refresh_token } = await res.json();
+  return { access_token, expires_at, refresh_token: refresh_token ?? active_refresh_token };
 }
 
 /** Get a users details using an access_token */

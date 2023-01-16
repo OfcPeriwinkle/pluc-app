@@ -1,7 +1,7 @@
-import { AuthOptions } from 'next-auth';
-
 import NextAuth from 'next-auth/next';
 import SpotifyProvider from 'next-auth/providers/spotify';
+import { AuthOptions } from 'next-auth';
+import { get_access_token } from '../../../lib/spotify';
 
 const authOptions: AuthOptions = {
   providers: [
@@ -18,14 +18,26 @@ const authOptions: AuthOptions = {
       if (account) {
         // account is only present on the first call
         token.access_token = account.access_token;
+        token.expires = Date.now() + account.expires_at! * 1000;
         token.refresh_token = account.refresh_token;
       }
 
-      return token;
+      // Check access token validity
+      if (Date.now() < token.expires!) {
+        return token;
+      } else if (!token.refresh_token) {
+        console.log('Access has expired and there is no refresh_token in JWT!');
+        return token;
+      }
+
+      const { access_token, expires_at, refresh_token } = await get_access_token(
+        token.refresh_token
+      );
+
+      return { ...token, access_token, expires: expires_at, refresh_token };
     },
     async session({ session, token }) {
       session.access_token = token.access_token;
-      session.refresh_token = token.refresh_token;
       return session;
     },
   },
