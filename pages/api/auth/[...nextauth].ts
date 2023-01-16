@@ -23,13 +23,15 @@ const authOptions: AuthOptions = {
       }
 
       // Check access token validity
-      if (Date.now() < token.expires!) {
+      if (token.expires && Date.now() < token.expires) {
+        console.log('Access token is valid! Yay!');
         return token;
       } else if (!token.refresh_token) {
         console.log('Access has expired and there is no refresh_token in JWT!');
         return token;
       }
 
+      console.log('Refreshing access_token...');
       const { access_token, expires_at, refresh_token } = await get_access_token(
         token.refresh_token
       );

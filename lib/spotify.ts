@@ -1,3 +1,5 @@
+import { PlaylistTrack } from 'spotify-types';
+
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
 const SPOTIFY_API_ROOT = 'https://api.spotify.com/v1';
 
@@ -61,17 +63,36 @@ export async function search_for_playlist(access_token: string, playlist_name: s
 }
 
 export async function get_playlist_tracks(access_token: string, playlist_id: string) {
-  const res = await fetch(
-    `${SPOTIFY_API_ROOT}/playlists/${playlist_id}/tracks?${new URLSearchParams({ limit: '50' })}`,
-    {
+  let next: string | null = '';
+  let url = `${SPOTIFY_API_ROOT}/playlists/${playlist_id}/tracks?${new URLSearchParams({
+    limit: '50',
+  })}`;
+
+  let all_tracks: PlaylistTrack[] = [];
+
+  do {
+    if (next !== '') {
+      url = next;
+    }
+
+    const res = await fetch(url, {
       method: 'GET',
       headers: { Authorization: `Bearer ${access_token}`, 'Content-Type': 'application/json' },
+    });
+
+    if (res.status !== 200) {
+      return null;
     }
-  );
 
-  if (res.status !== 200) {
-    return null;
-  }
+    // Process response from Spotify
+    const spotify_res = await res.json();
+    all_tracks = [...all_tracks, ...(spotify_res.items as PlaylistTrack[])];
 
-  return res.json();
+    // Get url to next group of results, or null if all tracks have been collected
+    next = spotify_res.next as string | null;
+  } while (next !== null);
+
+  return new Promise<PlaylistTrack[]>((resolve) => {
+    resolve(all_tracks);
+  });
 }
