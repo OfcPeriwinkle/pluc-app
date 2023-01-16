@@ -2,17 +2,45 @@
 
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
+import PlaylistSearchResults from './PlaylistSearchResults';
+import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
 
-async function playlist_search(playlist_name: string) {
-  console.log(`Searching for ${playlist_name}`);
+interface PlaylistSearchResults {
+  playlists: { items: SimplifiedPlaylist[] };
+}
 
-  // Contact pluc's API to search for the playlist
+/** Contact pluc's API to search for a playlist_name */
+async function playlist_search(playlist_name: string): Promise<PlaylistSearchResults | null> {
   const res = await fetch(`/api/playlist_search?q=${playlist_name}`);
-  console.log(await res.json());
+
+  if (res.status !== 200) {
+    return null;
+  }
+
+  return res.json();
 }
 
 export default function Search() {
   const [playlist, setPlaylist] = useState('');
+  const [searchResults, setSearchResults] = useState<SimplifiedPlaylist[] | undefined>(undefined);
+
+  async function enter_handler(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key !== 'Enter') {
+      return;
+    }
+
+    const search_results = await playlist_search(playlist);
+
+    if (!search_results) {
+      alert(`Error searching for playlist ${playlist}`);
+      return;
+    }
+
+    console.log(search_results.playlists.items);
+
+    // Get list of playlists and use them to set the React state
+    setSearchResults(search_results.playlists.items);
+  }
 
   return (
     <>
@@ -25,20 +53,16 @@ export default function Search() {
         Log out
       </button>
       <input
-        className="h-14 w-1/2 rounded-full text-2xl text-gray-dark align-center pl-5 pr-5 shadow-lg shadow-green"
+        className="h-14 w-1/2 rounded-full text-2xl text-gray-dark align-center pl-5 pr-5 shadow-lg focus:outline-none"
         placeholder="Find a playlist"
         name="playlist"
         type="text"
         onChange={(e) => {
           setPlaylist(e.target.value);
         }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            // TODO: query spotify
-            playlist_search(playlist);
-          }
-        }}
+        onKeyDown={enter_handler}
       />
+      {searchResults && <PlaylistSearchResults playlists={searchResults} />}
     </>
   );
 }

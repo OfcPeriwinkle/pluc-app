@@ -6,8 +6,7 @@ import Login from './Login';
 import Search from './Search';
 
 export default function SearchOrLogin() {
-    const { data: session } = useSession();
-    console.log(session);
+  const { data: session } = useSession();
 
-    return session ? <Search /> : <Login />;
+  return session ? <Search /> : <Login />;
 }

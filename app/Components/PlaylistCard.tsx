@@ -16,10 +16,10 @@ export default function PlaylistCard({
       <div className="flex flex-row gap-6 justify-evenly items-center w-full">
         <Image
           src={playlist_image_url}
-          width={150}
-          height={150}
+          width={160}
+          height={160}
           alt="Playlist Image"
-          className="rounded-xl group-hover:shadow-xl bightness-75 group-hover:brightness-100"
+          className="rounded-xl w-40 h-40 object-cover bightness-75 group-hover:brightness-100 group-hover:shadow-xl "
         />
         <div>
           <h1 className="max-w-md truncate text-ellipsis text-3xl font-semibold text-white">
@@ -30,7 +30,7 @@ export default function PlaylistCard({
           </h3>
         </div>
       </div>
-      <button className="rounded-full p-4 bg-green text-white text-l font-medium hover:shadow-xl hover:scale-105 duration-150">
+      <button className="rounded-full p-4 bg-green text-white font-medium hover:shadow-xl hover:scale-105 duration-150">
         Find Duplicates
       </button>
     </div>

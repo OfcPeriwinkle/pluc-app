@@ -28,5 +28,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ error: 'The access_token expired' });
   }
 
-  return res.status(200).json({ search_results });
+  return res.status(200).json(search_results);
 }
