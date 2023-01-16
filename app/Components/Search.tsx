@@ -24,7 +24,7 @@ export default function Search() {
   const [playlist, setPlaylist] = useState('');
   const [searchResults, setSearchResults] = useState<SimplifiedPlaylist[] | undefined>(undefined);
 
-  async function enter_handler(e: React.KeyboardEvent<HTMLInputElement>) {
+  async function handle_enter(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key !== 'Enter') {
       return;
     }
@@ -60,7 +60,7 @@ export default function Search() {
         onChange={(e) => {
           setPlaylist(e.target.value);
         }}
-        onKeyDown={enter_handler}
+        onKeyDown={handle_enter}
       />
       {searchResults && <PlaylistSearchResults playlists={searchResults} />}
     </>

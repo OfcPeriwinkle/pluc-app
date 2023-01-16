@@ -53,7 +53,23 @@ export async function search_for_playlist(access_token: string, playlist_name: s
     }
   );
 
-  if (res.status === 401) {
+  if (res.status !== 200) {
+    return null;
+  }
+
+  return res.json();
+}
+
+export async function get_playlist_tracks(access_token: string, playlist_id: string) {
+  const res = await fetch(
+    `${SPOTIFY_API_ROOT}/playlists/${playlist_id}/tracks?${new URLSearchParams({ limit: '50' })}`,
+    {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${access_token}`, 'Content-Type': 'application/json' },
+    }
+  );
+
+  if (res.status !== 200) {
     return null;
   }
 

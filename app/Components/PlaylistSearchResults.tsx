@@ -9,6 +9,7 @@ export interface PlaylistSearchResultsProps {
 export default function PlaylistSearchResults({ playlists }: PlaylistSearchResultsProps) {
   const processed_playlists = playlists.map((playlist) => {
     return {
+      playlist_id: playlist.id,
       playlist_image_url: playlist.images[0].url,
       playlist_name: playlist.name,
       display_name: playlist.owner.display_name ?? 'No Name',
@@ -21,6 +22,7 @@ export default function PlaylistSearchResults({ playlists }: PlaylistSearchResul
         return (
           <PlaylistCard
             key={index}
+            playlist_id={playlist_details.playlist_id}
             playlist_image_url={playlist_details.playlist_image_url}
             playlist_name={playlist_details.playlist_name}
             user_display_name={playlist_details.display_name}

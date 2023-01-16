@@ -6,10 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const session = await getSession({ req });
 
   // Verify session
-  if (!session) {
-    return res.status(400).json({ error: 'Session does not exist' });
-  } else if (!session.access_token) {
-    return res.status(401).json({ error: 'Session does not have valid access token' });
+  if (!session || !session.access_token) {
+    return res.status(401).json({ error: 'Invalid session' });
   }
 
   // Extract playlist_name from query string and check validity
@@ -18,15 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } = req;
 
   if (!playlist_name || typeof playlist_name !== 'string') {
-    return res.status(402).json({ error: 'No valid playlist name recieved' });
+    return res.status(400).json({ error: 'No valid playlist name recieved' });
   }
 
   // Search for playlist name
   const search_results = await search_for_playlist(session.access_token, playlist_name);
-
-  if (search_results === null) {
-    return res.status(401).json({ error: 'The access_token expired' });
-  }
-
   return res.status(200).json(search_results);
 }

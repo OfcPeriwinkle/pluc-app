@@ -1,16 +1,30 @@
 import Image from 'next/image';
 
 export interface PlaylistCardProps {
+  playlist_id: string;
   playlist_image_url: string;
   playlist_name: string;
   user_display_name: string;
 }
 
 export default function PlaylistCard({
+  playlist_id,
   playlist_image_url,
   playlist_name,
   user_display_name,
 }: PlaylistCardProps) {
+  async function handle_click() {
+    console.log(playlist_id);
+
+    const res = await fetch(`/api/playlist_tracks?id=${playlist_id}`);
+
+    if (res.status !== 200) {
+      return null;
+    }
+
+    console.log(await res.json());
+  }
+
   return (
     <div className="group flex flex-col justify-center items-center max-w-fit min-w-fit rounded-xl p-6 gap-6 bg-gray-light shadow-xl bg-opacity-10 hover:bg-opacity-20 ease-in-out duration-150">
       <div className="flex flex-row gap-6 justify-evenly items-center w-full">
@@ -30,7 +44,10 @@ export default function PlaylistCard({
           </h3>
         </div>
       </div>
-      <button className="rounded-full p-4 bg-green text-white font-medium hover:shadow-xl hover:scale-105 duration-150">
+      <button
+        className="rounded-full p-4 bg-green text-white font-medium hover:shadow-xl hover:scale-105 duration-150"
+        onClick={handle_click}
+      >
         Find Duplicates
       </button>
     </div>
