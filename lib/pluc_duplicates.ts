@@ -24,20 +24,37 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]) {
 
 export default function test_main() {
   const root: PlucTreeNode = {};
-  const artist_nodes: any = {};
+  const artist_dict: any = {};
 
   // map for immutability
   test_json.map((entry) => {
     // Get the first artist in the case of a collab
+    const artist = entry.track.artists[0];
+    const album = entry.track.album;
+    const track = entry.track;
 
-    if (!(entry.track.artists[0].name in artist_nodes)) {
-      const artist_node = {
-        ...entry.track.artists[0],
-        //   TODO: album list
+    // Add artist node if it doesn't exist
+    if (!(artist.name in artist_dict)) {
+      artist_dict[artist.name] = {
+        ...artist, // TODO: only take what we need, lots of duplicate data otherwise
+        album_nodes: {},
       };
-      artist_nodes[`${artist_node.name}`] = artist_node;
     }
+
+    // Add album node to artist if it doesn't exist
+    const artist_node = artist_dict[artist.name];
+
+    if (!(album.id in artist_node['album_nodes'])) {
+      artist_node['album_nodes'][album.id] = {
+        ...album,
+        track_nodes: [],
+      };
+    }
+
+    // Add track to album node even if it exists
+    const album_node = artist_node['album_nodes'][album.id];
+    album_node['track_nodes'].push({ ...track });
   });
 
-  console.log(artist_nodes);
+  console.log(artist_dict);
 }
