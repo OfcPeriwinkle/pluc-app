@@ -1,5 +1,5 @@
 import { Artist, PlaylistTrack, SimplifiedAlbum, Track } from 'spotify-types';
-import { jaro } from 'jaro-winkler-typescript';
+import { jaroWinkler } from 'jaro-winkler-typescript';
 import 'lodash.combinations';
 import 'lodash.product';
 import _ from 'lodash';
@@ -15,6 +15,10 @@ interface PlucArtist extends Artist {
 interface ArtistDict {
   [artist_id: string]: PlucArtist;
 }
+
+// TODO: have these be configurable by the user
+const TIME_DIFF_THRESHOLD_MS = 5000;
+const JARO_WINKLER_SIMILARITY_THRESHOLD = 0.7;
 
 export default function get_duplicates(playlist_tracks: PlaylistTrack[]) {
   console.log('Getting duplicates...');
@@ -83,10 +87,28 @@ function find_duplicates(artist_dict: ArtistDict) {
 
       // Conduct comparison
       track_combinations.map(([track_a, track_b]: Track[]) => {
-        const similarity = jaro(track_a.name, track_b.name, { caseSensitive: true });
-        const time_diff = Math.abs(track_a.duration_ms - track_b.duration_ms);
+        // TODO: Spotify allows songs with empty names; we should handle this eventually since these
+        // tracks are unplayable and should be removed
+        if (track_a.name.length === 0 || track_b.name.length === 0) {
+          return;
+        }
 
-        if (similarity > 0.7 && time_diff < 5000) {
+        // If the first characters of the title are diff, tracks are diff
+        if (track_a.name[0] !== track_b.name[0]) {
+          return;
+        }
+
+        // If the tracks are very diff time-wise, they're likely diff
+        const time_diff = Math.abs(track_a.duration_ms - track_b.duration_ms);
+        if (time_diff > TIME_DIFF_THRESHOLD_MS) {
+          return;
+        }
+
+        // TODO: we should be able to use additional metadata from each track to make this
+        // determination since string similarity only gets us so far
+        // Calculate similarity metric
+        const similarity = jaroWinkler(track_a.name, track_b.name, { caseSensitive: true });
+        if (similarity > JARO_WINKLER_SIMILARITY_THRESHOLD) {
           console.log(
             'Duplicate Detected!',
             '\nA:',
