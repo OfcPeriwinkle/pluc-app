@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import get_duplicates from '../../lib/pluc_duplicates';
+import { PlaylistTrack } from 'spotify-types';
 
 export interface PlaylistCardProps {
   playlist_id: string;
@@ -22,7 +24,8 @@ export default function PlaylistCard({
       return null;
     }
 
-    console.log(await res.json());
+    const playlist_tracks = (await res.json()) as PlaylistTrack[];
+    get_duplicates(playlist_tracks);
   }
 
   return (

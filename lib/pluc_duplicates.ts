@@ -1,40 +1,31 @@
-import { Artist, PlaylistTrack, Track } from 'spotify-types';
-import getPermutations from './combinations';
-import test_json from '../playlist_tracks.json';
-import arrayProduct from './cartesian_product';
-import jaro_similarity from './jaro_similarity';
+import { Artist, PlaylistTrack, SimplifiedAlbum, Track } from 'spotify-types';
+import { jaro } from 'jaro-winkler-typescript';
+import 'lodash.combinations';
+import 'lodash.product';
+import _ from 'lodash';
 
-interface PlucTreeNode {
-  children?: Array<PlucTreeNode>;
+interface PlucAlbum extends SimplifiedAlbum {
+  track_nodes: Track[];
 }
 
-function build_pluc_tree(playlist_tracks: PlaylistTrack[]) {
-  const root: PlucTreeNode = {};
-  const artist_nodes: Artist[] = [];
+interface PlucArtist extends Artist {
+  album_nodes: { [album_id: string]: PlucAlbum };
+}
 
-  // map for immutability
+interface ArtistDict {
+  [artist_id: string]: PlucArtist;
+}
+
+export default function get_duplicates(playlist_tracks: PlaylistTrack[]) {
+  console.log('Getting duplicates...');
+  const artist_dict: ArtistDict = {};
+
   playlist_tracks.map((entry) => {
-    if (!entry.track || !('album' in entry.track)) {
+    // Filter out playlist content that aren't tracks
+    if (!entry || !entry.track || !('album' in entry.track)) {
       return;
     }
 
-    // Get the first artist in the case of a collab
-    artist_nodes.push(entry.track.artists[0]);
-  });
-
-  console.log(artist_nodes);
-}
-
-// function find_duplicates(artist_dict: any) {
-//   artist_dict.map((artist) => {
-
-//   });
-// }
-
-export default function test_main() {
-  const artist_dict: any = {};
-
-  test_json.map((entry) => {
     // Get the first artist in the case of a collab
     const artist = entry.track.artists[0];
     const album = entry.track.album;
@@ -61,15 +52,21 @@ export default function test_main() {
     // Add track to album node even if it exists
     // TODO: catch duplicates here
     const album_node = artist_node['album_nodes'][album.id];
-    album_node['track_nodes'].push({ ...track });
+    album_node['track_nodes'].push(track);
   });
 
-  /**
-   * Extract this to it's own function, keeping in here for typehints
-   * ALSO: This might make a ton of sense as a Python microservice
-   * (or more likely a serveless function) since Python
-   * is so so so so so SO much better at math and statistics stuff
-   */
+  find_duplicates(artist_dict);
+  console.log('Done!');
+}
+
+/**
+ * Find duplicates within a artist dictionary
+ * This might make a ton of sense as a Python serveless function since Python
+ * is so so so so so SO much better at math and statistics stuff
+ *
+ * TODO: make private and return something!
+ */
+function find_duplicates(artist_dict: ArtistDict) {
   Object.entries(artist_dict).map(([artist_id, artist_node]) => {
     const albums = artist_node.album_nodes;
 
@@ -77,15 +74,16 @@ export default function test_main() {
       return;
     }
 
-    const permutations = getPermutations([Object.keys(albums)], 2);
-    permutations.map(([album_a, album_b]) => {
-      const track_nodes_a = albums[album_a].track_nodes;
-      const track_nodes_b = albums[album_b].track_nodes;
-      const track_combinations = arrayProduct(track_nodes_a, track_nodes_b);
+    const permutations = _.combinations(Object.keys(albums), 2);
+
+    permutations.map(([album_id_a, album_id_b]: string[]) => {
+      const track_nodes_a = albums[album_id_a].track_nodes;
+      const track_nodes_b = albums[album_id_b].track_nodes;
+      const track_combinations = _.product(track_nodes_a, track_nodes_b);
 
       // Conduct comparison
-      track_combinations.map(([track_a, track_b]) => {
-        const similarity = jaro_similarity(track_a.name, track_b.name);
+      track_combinations.map(([track_a, track_b]: Track[]) => {
+        const similarity = jaro(track_a.name, track_b.name, { caseSensitive: true });
         const time_diff = Math.abs(track_a.duration_ms - track_b.duration_ms);
 
         if (similarity > 0.7 && time_diff < 5000) {
@@ -93,8 +91,10 @@ export default function test_main() {
             'Duplicate Detected!',
             '\nA:',
             track_a.name,
+            track_a.id,
             '\nB:',
             track_b.name,
+            track_b.id,
             '\nSimilarity:',
             similarity,
             '\nTime Diff:',
