@@ -16,7 +16,7 @@ const JARO_WINKLER_SIMILARITY_THRESHOLD = 0.7;
  * Each key is a track ID that has duplicates and each value is a tuple containing metadata for the
  * track whose ID is being used as the key and list of that track's identified duplicates.
  */
-interface DuplicateGraph {
+export interface DuplicateGraph {
   [track_id: string]: [Track, Track[]];
 }
 
@@ -27,7 +27,7 @@ interface DuplicateGraph {
  * Each value is a tuple containing metadata for the artist whose ID is the entry's key and
  * a DuplicateGraph of the duplicated tracks for that artist.
  */
-interface DuplicateResults {
+export interface DuplicateResults {
   [artist_id: string]: [Artist, DuplicateGraph];
 }
 
@@ -170,7 +170,9 @@ function find_duplicates(artist_dict: ArtistDict): DuplicateResults {
     }
 
     console.log(artist_node.name, duplicate_graph);
-    duplicates_by_artist[artist_id] = [artist_node, duplicate_graph];
+    if (!_.isEmpty(duplicate_graph)) {
+      duplicates_by_artist[artist_id] = [artist_node, duplicate_graph];
+    }
   });
 
   console.log(duplicates_by_artist);
