@@ -31,11 +31,13 @@ export interface DuplicateResults {
   [artist_id: string]: [Artist, DuplicateGraph];
 }
 
-interface PlucAlbum extends SimplifiedAlbum {
+interface PlucAlbum {
+  name: string;
   track_nodes: Track[];
 }
 
-interface PlucArtist extends Artist {
+interface PlucArtist {
+  name: string;
   album_nodes: { [album_id: string]: PlucAlbum };
 }
 
@@ -46,8 +48,7 @@ interface ArtistDict {
 export default function get_duplicates(playlist_tracks: PlaylistTrack[]): DuplicateResults {
   console.log('Getting duplicates...');
   const artist_dict = build_pluc_tree(playlist_tracks);
-  return find_duplicates(artist_dict);
-  console.log('Done!');
+  // return find_duplicates(artist_dict);
 }
 
 function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
@@ -67,7 +68,7 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
     // Add artist node if it doesn't exist
     if (!(artist.id in artist_dict)) {
       artist_dict[artist.id] = {
-        ...artist, // TODO: only take what we need, lots of duplicate data otherwise
+        name: artist.name,
         album_nodes: {},
       };
     }
@@ -77,7 +78,7 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
 
     if (!(album.id in artist_node['album_nodes'])) {
       artist_node['album_nodes'][album.id] = {
-        ...album,
+        name: album.name,
         track_nodes: [],
       };
     }
@@ -88,6 +89,7 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
     album_node['track_nodes'].push(track);
   });
 
+  console.log(artist_dict);
   return artist_dict;
 }
 
