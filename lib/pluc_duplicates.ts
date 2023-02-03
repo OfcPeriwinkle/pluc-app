@@ -10,27 +10,15 @@ import { forEachConnectedComponent } from 'graphology-components';
 const TIME_DIFF_THRESHOLD_MS = 5000;
 const JARO_WINKLER_SIMILARITY_THRESHOLD = 0.7;
 
-interface TrackWithDuplicates {
+export interface TrackWithDuplicates {
   section_name: string;
   duplicates: Track[];
 }
 
-interface ArtistWithDuplicates {
+export interface ArtistWithDuplicates {
   artist: { name: string; image: string };
   tracks_with_duplicates: TrackWithDuplicates[];
   total_duplicates: number;
-}
-
-/**
- * DuplicateGraph
- *
- * Adjaceny lists for all tracks containing duplicates.
- *
- * Each key is a track ID that has duplicates and each value is a tuple containing metadata for the
- * track whose ID is being used as the key and list of that track's identified duplicates.
- */
-export interface DuplicateGraph {
-  [track_id: string]: [Track, Track[]];
 }
 
 /**
@@ -40,7 +28,7 @@ export interface DuplicateGraph {
  * Each value is a tuple containing metadata for the artist whose ID is the entry's key and
  * a DuplicateGraph of the duplicated tracks for that artist.
  */
-export interface DuplicateResults {
+interface DuplicateResults {
   [artist_id: string]: UndirectedGraph;
 }
 
