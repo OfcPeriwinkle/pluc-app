@@ -1,5 +1,3 @@
-'use client';
-
 import { Track } from 'spotify-types';
 import DuplicateTrackCard from './DuplicateTrackCard';
 

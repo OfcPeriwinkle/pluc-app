@@ -1,4 +1,4 @@
-import { Artist, PlaylistTrack, SimplifiedAlbum, Track } from 'spotify-types';
+import { Artist, PlaylistTrack, Track } from 'spotify-types';
 import { jaroWinkler } from 'jaro-winkler-typescript';
 import 'lodash.combinations';
 import 'lodash.product';
@@ -52,7 +52,7 @@ export default function get_duplicates(playlist_tracks: PlaylistTrack[]): Artist
   let artists_with_duplicates: ArtistWithDuplicates[] = [];
 
   // Iterate over each artist's duplicate graph
-  Object.entries(duplicates_by_artist).map(([artist_id, duplicate_graph]) => {
+  Object.entries(duplicates_by_artist).map(async ([artist_id, duplicate_graph]) => {
     let tracks_with_duplicates: TrackWithDuplicates[] = [];
     let total_duplicates = 0;
 
@@ -81,8 +81,17 @@ export default function get_duplicates(playlist_tracks: PlaylistTrack[]): Artist
       });
     });
 
+    //  TODO: batch these requests so we only send one request for all artists
+    const res = await fetch(`/api/artist_details?q=${artist_id}`);
+
+    if (!res.ok) {
+      return null;
+    }
+
+    const artist_details = (await res.json()).artists[0] as Artist;
+
     artists_with_duplicates.push({
-      artist: { name: 'Artist Name', image: 'Image URL' },
+      artist: { name: artist_details.name, image: artist_details.images[0].url },
       tracks_with_duplicates: tracks_with_duplicates,
       total_duplicates: total_duplicates,
     });
@@ -194,7 +203,11 @@ function find_duplicates(artist_dict: ArtistDict): DuplicateResults {
           duplicate_graph.addNode(track_b.id, { ...track_b });
         }
 
-        duplicate_graph.addEdge(track_a.id, track_b.id);
+        // TODO: some edges can already be present when we hit this, this might mean traditional
+        // duplicates aren't being caught
+        if (!duplicate_graph.hasEdge(track_a.id, track_b.id)) {
+          duplicate_graph.addEdge(track_a.id, track_b.id);
+        }
       });
     });
 

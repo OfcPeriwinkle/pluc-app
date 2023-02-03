@@ -44,6 +44,24 @@ export async function get_user_details(access_token: string) {
   return res.json();
 }
 
+export async function get_artists(access_token: string, artist_list: string) {
+  const res = await fetch(
+    `${SPOTIFY_API_ROOT}/artists?${new URLSearchParams({ ids: artist_list })}`,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  if (!res.ok) {
+    return null;
+  }
+
+  return res.json();
+}
+
 export async function search_for_playlist(access_token: string, playlist_name: string) {
   const res = await fetch(
     `${SPOTIFY_API_ROOT}/search?${new URLSearchParams({ type: 'playlist', q: playlist_name })}`,
@@ -55,6 +73,7 @@ export async function search_for_playlist(access_token: string, playlist_name: s
     }
   );
 
+  //  TODO: update this stuff so it's more in line with normal code
   if (res.status !== 200) {
     return null;
   }

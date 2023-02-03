@@ -17,7 +17,7 @@ export default function ArtistDuplicates({
     <section className="flex flex-col gap-5 rounded-xl bg-gray-light bg-opacity-10 p-7 shadow-xl">
       <div className="flex w-full gap-5">
         <Image
-          src="https://i.scdn.co/image/a4ba54e5ad0a2ef0324205130cca16df1e19c822"
+          src={artist_image}
           alt="Artist Picture"
           width={200}
           height={200}
@@ -26,7 +26,7 @@ export default function ArtistDuplicates({
         <div className="flex w-full flex-col items-start justify-center">
           <h1 className="text-4xl font-bold">{artist_name}</h1>
           <h2 className="text-xl font-semibold text-gray-light">
-            {tracks_with_duplicates.length} track with {total_duplicates} potential duplicates
+            {tracks_with_duplicates.length} track(s) with {total_duplicates} potential duplicates
           </h2>
         </div>
       </div>

@@ -1,8 +1,5 @@
-'use client';
-
 import ArtistDuplicates from './Components/ArtistDuplicates';
 import duplicate_results from '../../duplicate_results.json';
-import { ArtistWithDuplicates } from '../../lib/pluc_duplicates';
 
 export default function SandBox() {
   return (
