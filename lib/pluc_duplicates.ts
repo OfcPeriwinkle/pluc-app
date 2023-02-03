@@ -3,10 +3,23 @@ import { jaroWinkler } from 'jaro-winkler-typescript';
 import 'lodash.combinations';
 import 'lodash.product';
 import _ from 'lodash';
+import { UndirectedGraph } from 'graphology';
+import { forEachConnectedComponent } from 'graphology-components';
 
 // TODO: have these be configurable by the user
 const TIME_DIFF_THRESHOLD_MS = 5000;
 const JARO_WINKLER_SIMILARITY_THRESHOLD = 0.7;
+
+interface TrackWithDuplicates {
+  section_name: string;
+  duplicates: Track[];
+}
+
+interface ArtistWithDuplicates {
+  artist: { name: string; image: string };
+  tracks_with_duplicates: TrackWithDuplicates[];
+  total_duplicates: number;
+}
 
 /**
  * DuplicateGraph
@@ -28,7 +41,7 @@ export interface DuplicateGraph {
  * a DuplicateGraph of the duplicated tracks for that artist.
  */
 export interface DuplicateResults {
-  [artist_id: string]: [Artist, DuplicateGraph];
+  [artist_id: string]: UndirectedGraph;
 }
 
 interface PlucAlbum {
@@ -45,10 +58,50 @@ interface ArtistDict {
   [artist_id: string]: PlucArtist;
 }
 
-export default function get_duplicates(playlist_tracks: PlaylistTrack[]): DuplicateResults {
-  console.log('Getting duplicates...');
+export default function get_duplicates(playlist_tracks: PlaylistTrack[]): ArtistWithDuplicates[] {
   const artist_dict = build_pluc_tree(playlist_tracks);
-  // return find_duplicates(artist_dict);
+  const duplicates_by_artist = find_duplicates(artist_dict);
+  let artists_with_duplicates: ArtistWithDuplicates[] = [];
+
+  // Iterate over each artist's duplicate graph
+  Object.entries(duplicates_by_artist).map(([artist_id, duplicate_graph]) => {
+    let tracks_with_duplicates: TrackWithDuplicates[] = [];
+    let total_duplicates = 0;
+
+    // Each graph_component is a cluster of songs that are duplicates of each other
+    forEachConnectedComponent(duplicate_graph, (graph_component) => {
+      let shortest_track_name = '';
+      let individual_duplicates: Track[] = [];
+
+      // Iterate through all tracks that are duplicates of each other
+      graph_component.map((track_id) => {
+        const track_details = duplicate_graph.getNodeAttributes(track_id) as Track;
+
+        // Picking shortest name of all tracks within this component so that the overarching track
+        // label can avoid being "Track Name - Remastered XXXX"
+        if (!shortest_track_name || track_details.name.length < shortest_track_name.length) {
+          shortest_track_name = track_details.name;
+        }
+
+        individual_duplicates.push(track_details);
+        total_duplicates++;
+      });
+
+      tracks_with_duplicates.push({
+        section_name: shortest_track_name,
+        duplicates: individual_duplicates,
+      });
+    });
+
+    artists_with_duplicates.push({
+      artist: { name: 'Artist Name', image: 'Image URL' },
+      tracks_with_duplicates: tracks_with_duplicates,
+      total_duplicates: total_duplicates,
+    });
+  });
+
+  console.log(artists_with_duplicates);
+  return artists_with_duplicates;
 }
 
 function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
@@ -103,7 +156,7 @@ function find_duplicates(artist_dict: ArtistDict): DuplicateResults {
   let duplicates_by_artist: DuplicateResults = {};
 
   Object.entries(artist_dict).map(([artist_id, artist_node]) => {
-    let duplicate_graph: DuplicateGraph = {};
+    let duplicate_graph = new UndirectedGraph();
     const albums = artist_node.album_nodes;
 
     if (Object.keys(albums).length === 1) {
@@ -119,6 +172,7 @@ function find_duplicates(artist_dict: ArtistDict): DuplicateResults {
       // Get all possible ordered pairs of tracks between the two albums
       const track_pairs = _.product(track_nodes_a, track_nodes_b);
       track_pairs.map(([track_a, track_b]: Track[]) => {
+        // TODO: make this it's own function
         // TODO: Spotify allows songs with empty names; we should handle this eventually since these
         // tracks are unplayable and should be removed
         if (track_a.name.length === 0 || track_b.name.length === 0) {
@@ -144,26 +198,15 @@ function find_duplicates(artist_dict: ArtistDict): DuplicateResults {
           return;
         }
 
-        // Tracks are likely duplicates create a duplicate graph if the current track doesn't have
-        // one and add the duplicate track to the current node's adjacency list
-        if (!(track_a.id in duplicate_graph)) {
-          duplicate_graph[track_a.id] = [track_a, []];
+        // Tracks are likely duplicates, add them to the graph if they aren't already present
+        if (!duplicate_graph.hasNode(track_a.id)) {
+          duplicate_graph.addNode(track_a.id, { ...track_a });
+        }
+        if (!duplicate_graph.hasNode(track_b.id)) {
+          duplicate_graph.addNode(track_b.id, { ...track_b });
         }
 
-        duplicate_graph[track_a.id][1].push(track_b);
-        console.log(
-          'Duplicate Detected!',
-          '\nA:',
-          track_a.name,
-          track_a.id,
-          '\nB:',
-          track_b.name,
-          track_b.id,
-          '\nSimilarity:',
-          similarity,
-          '\nTime Diff:',
-          time_diff
-        );
+        duplicate_graph.addEdge(track_a.id, track_b.id);
       });
     });
 
@@ -171,12 +214,10 @@ function find_duplicates(artist_dict: ArtistDict): DuplicateResults {
       throw Error("Artist's duplicate graph is about to be overridden");
     }
 
-    console.log(artist_node.name, duplicate_graph);
-    if (!_.isEmpty(duplicate_graph)) {
-      duplicates_by_artist[artist_id] = [artist_node, duplicate_graph];
+    if (duplicate_graph.order) {
+      duplicates_by_artist[artist_id] = duplicate_graph;
     }
   });
 
-  console.log(duplicates_by_artist);
   return duplicates_by_artist;
 }
