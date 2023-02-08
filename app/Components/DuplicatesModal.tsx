@@ -13,13 +13,8 @@ export default function DuplicatesModal() {
   const [duplicateResults, setDuplicateResults] = useState<ArtistWithDuplicates[]>([]);
 
   useEffect(() => {
-    console.log('useEffect');
     const artists_with_duplicates = get_duplicates(tracks);
-    console.log(artists_with_duplicates, artists_with_duplicates.length);
-
-    if (artists_with_duplicates.length !== 0) {
-      setDuplicateResults(artists_with_duplicates);
-    }
+    setDuplicateResults(artists_with_duplicates);
   }, [tracks]);
 
   return (
