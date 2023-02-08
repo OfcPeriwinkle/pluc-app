@@ -52,7 +52,7 @@ export default function get_duplicates(playlist_tracks: PlaylistTrack[]): Artist
   let artists_with_duplicates: ArtistWithDuplicates[] = [];
 
   // Iterate over each artist's duplicate graph
-  Object.entries(duplicates_by_artist).map(async ([artist_id, duplicate_graph]) => {
+  Object.entries(duplicates_by_artist).map(([artist_id, duplicate_graph]) => {
     let tracks_with_duplicates: TrackWithDuplicates[] = [];
     let total_duplicates = 0;
 
@@ -81,17 +81,21 @@ export default function get_duplicates(playlist_tracks: PlaylistTrack[]): Artist
       });
     });
 
-    //  TODO: batch these requests so we only send one request for all artists
-    const res = await fetch(`/api/artist_details?q=${artist_id}`);
+    // TODO: perform this fetch somewhere else maybe? Or find a way to make this function async
+    // //  TODO: batch these requests so we only send one request for all artists
+    // const res = await fetch(`/api/artist_details?q=${artist_id}`);
 
-    if (!res.ok) {
-      return null;
-    }
+    // if (!res.ok) {
+    //   return null;
+    // }
 
-    const artist_details = (await res.json()).artists[0] as Artist;
+    // const artist_details = (await res.json()).artists[0] as Artist;
 
     artists_with_duplicates.push({
-      artist: { name: artist_details.name, image: artist_details.images[0].url },
+      artist: {
+        name: 'Placeholder',
+        image: 'https://i.scdn.co/image/ab6761610000e5eba213bd0d2152db1ce9c8da70',
+      },
       tracks_with_duplicates: tracks_with_duplicates,
       total_duplicates: total_duplicates,
     });
