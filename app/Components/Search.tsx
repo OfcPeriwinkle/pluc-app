@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { signOut } from 'next-auth/react';
 import PlaylistSearchResults from './PlaylistSearchResults';
 import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
+import { PlaylistContext } from '../Contexts/PlaylistContext';
 
 interface PlaylistSearchResults {
   playlists: { items: SimplifiedPlaylist[] };
@@ -22,7 +23,7 @@ async function playlist_search(playlist_name: string): Promise<PlaylistSearchRes
 
 export default function Search() {
   const [playlist, setPlaylist] = useState('');
-  const [searchResults, setSearchResults] = useState<SimplifiedPlaylist[] | undefined>(undefined);
+  const { searchResults, setSearchResults } = useContext(PlaylistContext);
 
   async function handle_enter(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key !== 'Enter') {
@@ -53,7 +54,7 @@ export default function Search() {
         Log out
       </button>
       <input
-        className="h-14 w-1/2 rounded-full text-2xl text-gray-dark align-center pl-5 pr-5 shadow-lg focus:outline-none"
+        className="align-center h-14 w-1/2 rounded-full pl-5 pr-5 text-2xl text-gray-dark shadow-lg"
         placeholder="Find a playlist"
         name="playlist"
         type="text"
