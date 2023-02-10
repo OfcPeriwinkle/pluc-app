@@ -32,8 +32,15 @@ export default function DuplicatesModal({
   }
 
   return (
-    <div className=" mx-20 flex flex-col items-center justify-center gap-10 rounded-xl bg-gray px-20 pb-20 pt-20">
-      <button onClick={handle_click}>X</button>
+    <div className="mx-20 flex flex-col items-center justify-center gap-10 rounded-xl bg-gray px-20 pb-20 pt-5">
+      <div className="flex w-full justify-end">
+        <button
+          onClick={handle_click}
+          className="h-10 w-10 rounded-full bg-gray-light bg-opacity-20 text-xl duration-200 ease-in-out hover:bg-opacity-40"
+        >
+          ✖
+        </button>
+      </div>
       {duplicateResults.length ? (
         duplicateResults.map(({ artist, tracks_with_duplicates, total_duplicates }, idx) => {
           return (
