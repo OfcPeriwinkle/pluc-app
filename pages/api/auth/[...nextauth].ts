@@ -37,7 +37,12 @@ const authOptions: AuthOptions = {
         token.refresh_token
       );
 
-      return { ...token, access_token, expires: expires_at, refresh_token };
+      return {
+        ...token,
+        access_token: access_token,
+        expires_at: expires_at,
+        refresh_token: refresh_token,
+      };
     },
     async session({ session, token }) {
       session.access_token = token.access_token;
