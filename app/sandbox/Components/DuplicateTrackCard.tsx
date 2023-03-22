@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { Track } from 'spotify-types';
+import Image from "next/image";
+import { Track } from "spotify-types";
 
 export default function DuplicateTrackCard({ track }: { track: Track }) {
   const image = track.album.images[0];
@@ -18,7 +18,9 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
         />
         <div className="flex flex-col justify-center">
           <h2 className="text-xl font-semibold">{track.name}</h2>
-          <h3 className="text-l font-medium text-gray-light">on {track.album.name}</h3>
+          <h3 className="text-l font-medium text-gray-light">
+            on {track.album.name}
+          </h3>
         </div>
       </div>
       <button className="w-40 rounded-full bg-red-600 p-2 font-medium shadow-xl duration-200 ease-in-out hover:scale-105 hover:shadow-2xl">

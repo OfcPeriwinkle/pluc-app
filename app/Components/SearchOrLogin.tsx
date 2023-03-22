@@ -1,13 +1,12 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import { useContext, useState } from 'react';
-import DuplicatesModal from './DuplicatesModal';
-import { PlaylistContext } from '../Contexts/PlaylistContext';
-import { PlaylistTrack, Track, SimplifiedPlaylist } from 'spotify-types';
-
-import Login from './Login';
-import Search from './Search';
+import { PlaylistContext } from "../Contexts/PlaylistContext";
+import DuplicatesModal from "./DuplicatesModal";
+import Login from "./Login";
+import Search from "./Search";
+import { useSession } from "next-auth/react";
+import { useContext, useState } from "react";
+import { PlaylistTrack, Track, SimplifiedPlaylist } from "spotify-types";
 
 export default function SearchOrLogin() {
   const { data: session } = useSession();
@@ -24,7 +23,10 @@ export default function SearchOrLogin() {
         setSearchResults: setSearchResults,
       }}
     >
-      <DuplicatesModal is_visible={modalVisible} set_visibility={setModalVisible} />
+      <DuplicatesModal
+        is_visible={modalVisible}
+        set_visibility={setModalVisible}
+      />
       {!modalVisible && <Search />}
     </PlaylistContext.Provider>
   ) : (

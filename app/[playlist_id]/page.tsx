@@ -1,14 +1,18 @@
-'use client';
+"use client";
 
-import PlaylistDuplicates from './Components/PlaylistDuplicates';
-import get_duplicates from '../../lib/pluc_duplicates';
-import { PlaylistTrack } from 'spotify-types';
-import test_artist_dict from '../../test_artist_dict.json';
+import get_duplicates from "../../lib/pluc_duplicates";
+import test_artist_dict from "../../test_artist_dict.json";
+import PlaylistDuplicates from "./Components/PlaylistDuplicates";
+import { PlaylistTrack } from "spotify-types";
 
 // TEST: 3GnRpO3H46wequDRjo2UFL -- Test playlist
-export default function DuplicatePage({ params }: { params: { playlist_id: string } }) {
+export default function DuplicatePage({
+  params,
+}: {
+  params: { playlist_id: string };
+}) {
   async function handle_click() {
-    console.log('In handle_click');
+    console.log("In handle_click");
 
     const res = await fetch(`/api/playlist_tracks?id=${params.playlist_id}`);
 

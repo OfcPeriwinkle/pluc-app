@@ -1,18 +1,19 @@
-import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
-
-import PlaylistCard from './PlaylistCard';
+import PlaylistCard from "./PlaylistCard";
+import type { SimplifiedPlaylist } from "spotify-types/typings/playlist";
 
 export interface PlaylistSearchResultsProps {
   playlists: SimplifiedPlaylist[];
 }
 
-export default function PlaylistSearchResults({ playlists }: PlaylistSearchResultsProps) {
+export default function PlaylistSearchResults({
+  playlists,
+}: PlaylistSearchResultsProps) {
   const processed_playlists = playlists.map((playlist) => {
     return {
       playlist_id: playlist.id,
       playlist_image_url: playlist.images[0].url,
       playlist_name: playlist.name,
-      display_name: playlist.owner.display_name ?? 'No Name',
+      display_name: playlist.owner.display_name ?? "No Name",
     };
   });
 

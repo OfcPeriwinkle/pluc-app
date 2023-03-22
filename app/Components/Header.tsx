@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
+import Link from "next/link";
+import { useState } from "react";
 
 interface HeaderProps {
   links: { href: string; label: string }[];
@@ -18,7 +18,9 @@ export default function Header({ links }: HeaderProps) {
       href={link.href}
       // TODO: having this as a flexbox is a little jank
       className={`${
-        active === link.href ? 'text-gray bg-green ' : 'text-white hover:text-gray-light'
+        active === link.href
+          ? "text-gray bg-green "
+          : "text-white hover:text-gray-light"
       } flex justify-center items-center h-full px-4 text-2xl font-bold`}
       onClick={(event) => {
         setActive(link.href);

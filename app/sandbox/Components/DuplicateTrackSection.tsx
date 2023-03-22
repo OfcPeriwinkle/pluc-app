@@ -1,5 +1,5 @@
-import { Track } from 'spotify-types';
-import DuplicateTrackCard from './DuplicateTrackCard';
+import DuplicateTrackCard from "./DuplicateTrackCard";
+import { Track } from "spotify-types";
 
 export default function DuplicateTrackSection({
   section_name,

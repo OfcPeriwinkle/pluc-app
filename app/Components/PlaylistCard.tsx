@@ -1,8 +1,8 @@
-import Image from 'next/image';
-import get_duplicates from '../../lib/pluc_duplicates';
-import { PlaylistTrack } from 'spotify-types';
-import { useContext } from 'react';
-import { PlaylistContext } from '../Contexts/PlaylistContext';
+import get_duplicates from "../../lib/pluc_duplicates";
+import { PlaylistContext } from "../Contexts/PlaylistContext";
+import Image from "next/image";
+import { useContext } from "react";
+import { PlaylistTrack } from "spotify-types";
 
 export interface PlaylistCardProps {
   playlist_id: string;

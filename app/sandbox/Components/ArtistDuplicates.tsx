@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import { TrackWithDuplicates } from '../../../lib/pluc_duplicates';
-import DuplicateTrackSection from './DuplicateTrackSection';
+import { TrackWithDuplicates } from "../../../lib/pluc_duplicates";
+import DuplicateTrackSection from "./DuplicateTrackSection";
+import Image from "next/image";
 
 export default function ArtistDuplicates({
   artist_name,
@@ -26,7 +26,8 @@ export default function ArtistDuplicates({
         <div className="flex w-full flex-col items-start justify-center">
           <h1 className="text-4xl font-bold">{artist_name}</h1>
           <h2 className="text-xl font-semibold text-gray-light">
-            {tracks_with_duplicates.length} track(s) with {total_duplicates} potential duplicates
+            {tracks_with_duplicates.length} track(s) with {total_duplicates}{" "}
+            potential duplicates
           </h2>
         </div>
       </div>

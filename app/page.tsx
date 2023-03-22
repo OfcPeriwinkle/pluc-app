@@ -1,4 +1,4 @@
-import SearchOrLogin from './Components/SearchOrLogin';
+import SearchOrLogin from "./Components/SearchOrLogin";
 
 export default function Home() {
   return (
@@ -7,8 +7,8 @@ export default function Home() {
         Keep the tunes, <span>pluc</span> the noise
       </h1>
       <h2 className="w-1/2 text-center text-3xl font-extrabold">
-        <span>Remove the duplicates</span> from your playlists that Spotify missed (or keep them, we
-        won't tell)
+        <span>Remove the duplicates</span> from your playlists that Spotify
+        missed (or keep them, we won't tell)
       </h2>
       <SearchOrLogin />
     </main>

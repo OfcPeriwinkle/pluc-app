@@ -1,8 +1,12 @@
-import './globals.css';
-import Header from './Components/Header';
-import ProvidersWrapper from './Components/ProvidersWrapper';
+import Header from "./Components/Header";
+import ProvidersWrapper from "./Components/ProvidersWrapper";
+import "./globals.css";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       {/*
@@ -13,10 +17,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-gradient-to-b from-gray-dark to-gray text-white tracking-tighter">
         <Header
           links={[
-            { label: 'pluc', href: '/' },
-            { label: 'sandbox', href: '/sandbox' },
-            { label: 'coming soon', href: '/coming_soon' },
-            { label: 'about', href: '/about' },
+            { label: "pluc", href: "/" },
+            { label: "sandbox", href: "/sandbox" },
+            { label: "coming soon", href: "/coming_soon" },
+            { label: "about", href: "/about" },
           ]}
         />
 
