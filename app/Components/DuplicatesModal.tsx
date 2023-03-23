@@ -1,6 +1,5 @@
 'use client';
 
-import duplicate_results from '../../duplicate_results.json';
 import { ArtistWithDuplicates } from '../../lib/pluc_duplicates';
 import get_duplicates from '../../lib/pluc_duplicates';
 import { PlaylistContext } from '../Contexts/PlaylistContext';
@@ -18,9 +17,10 @@ export default function DuplicatesModal({
   const [duplicateResults, setDuplicateResults] = useState<ArtistWithDuplicates[]>([]);
 
   useEffect(() => {
-    const artists_with_duplicates = get_duplicates(tracks);
-    setDuplicateResults(artists_with_duplicates);
-    set_visibility(tracks.length > 0);
+    get_duplicates(tracks).then((artists_with_duplicates) => {
+      setDuplicateResults(artists_with_duplicates);
+      set_visibility(tracks.length > 0);
+    });
   }, [tracks]);
 
   function handle_click() {

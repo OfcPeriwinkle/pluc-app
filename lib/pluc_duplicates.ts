@@ -1,10 +1,10 @@
-import { UndirectedGraph } from "graphology";
-import { forEachConnectedComponent } from "graphology-components";
-import { jaroWinkler } from "jaro-winkler-typescript";
-import _ from "lodash";
-import "lodash.combinations";
-import "lodash.product";
-import { Artist, PlaylistTrack, Track } from "spotify-types";
+import { UndirectedGraph } from 'graphology';
+import { forEachConnectedComponent } from 'graphology-components';
+import { jaroWinkler } from 'jaro-winkler-typescript';
+import _ from 'lodash';
+import 'lodash.combinations';
+import 'lodash.product';
+import { Artist, PlaylistTrack, Track } from 'spotify-types';
 
 // TODO: have these be configurable by the user
 const TIME_DIFF_THRESHOLD_MS = 5000;
@@ -46,71 +46,66 @@ interface ArtistDict {
   [artist_id: string]: PlucArtist;
 }
 
-export default function get_duplicates(
+export default async function get_duplicates(
   playlist_tracks: PlaylistTrack[]
-): ArtistWithDuplicates[] {
+): Promise<ArtistWithDuplicates[]> {
   const artist_dict = build_pluc_tree(playlist_tracks);
   const duplicates_by_artist = find_duplicates(artist_dict);
   let artists_with_duplicates: ArtistWithDuplicates[] = [];
 
   // Iterate over each artist's duplicate graph
-  Object.entries(duplicates_by_artist).map(([artist_id, duplicate_graph]) => {
-    let tracks_with_duplicates: TrackWithDuplicates[] = [];
-    let total_duplicates = 0;
+  const res = await Promise.all(
+    Object.entries(duplicates_by_artist).map(async ([artist_id, duplicate_graph]) => {
+      let tracks_with_duplicates: TrackWithDuplicates[] = [];
+      let total_duplicates = 0;
 
-    // Each graph_component is a cluster of songs that are duplicates of each other
-    forEachConnectedComponent(duplicate_graph, (graph_component) => {
-      let shortest_track_name = "";
-      let individual_duplicates: Track[] = [];
+      // Each graph_component is a cluster of songs that are duplicates of each other
+      forEachConnectedComponent(duplicate_graph, (graph_component) => {
+        let shortest_track_name = '';
+        let individual_duplicates: Track[] = [];
 
-      // Iterate through all tracks that are duplicates of each other
-      graph_component.map((track_id) => {
-        const track_details = duplicate_graph.getNodeAttributes(
-          track_id
-        ) as Track;
+        // Iterate through all tracks that are duplicates of each other
+        graph_component.map((track_id) => {
+          const track_details = duplicate_graph.getNodeAttributes(track_id) as Track;
 
-        // Picking shortest name of all tracks within this component so that the overarching track
-        // label can avoid being "Track Name - Remastered XXXX"
-        if (
-          !shortest_track_name ||
-          track_details.name.length < shortest_track_name.length
-        ) {
-          shortest_track_name = track_details.name;
-        }
+          // Picking shortest name of all tracks within this component so that the overarching track
+          // label can avoid being "Track Name - Remastered XXXX"
+          if (!shortest_track_name || track_details.name.length < shortest_track_name.length) {
+            shortest_track_name = track_details.name;
+          }
 
-        individual_duplicates.push(track_details);
-        total_duplicates++;
+          individual_duplicates.push(track_details);
+          total_duplicates++;
+        });
+
+        tracks_with_duplicates.push({
+          section_name: shortest_track_name,
+          duplicates: individual_duplicates,
+        });
       });
 
-      tracks_with_duplicates.push({
-        section_name: shortest_track_name,
-        duplicates: individual_duplicates,
+      //  TODO: batch these requests so we only send one request for all artists
+      const res = await fetch(`/api/artist_details?q=${artist_id}`);
+
+      if (!res.ok) {
+        return null;
+      }
+
+      const artist_details = (await res.json()).artists[0] as Artist;
+
+      artists_with_duplicates.push({
+        artist: {
+          name: artist_details.name,
+          image: artist_details.images[0].url,
+        },
+        tracks_with_duplicates: tracks_with_duplicates,
+        total_duplicates: total_duplicates,
       });
-    });
-
-    // TODO: perform this fetch somewhere else maybe? Or find a way to make this function async
-    // //  TODO: batch these requests so we only send one request for all artists
-    // const res = await fetch(`/api/artist_details?q=${artist_id}`);
-
-    // if (!res.ok) {
-    //   return null;
-    // }
-
-    // const artist_details = (await res.json()).artists[0] as Artist;
-
-    artists_with_duplicates.push({
-      artist: {
-        name: "Placeholder",
-        image:
-          "https://i.scdn.co/image/ab6761610000e5eba213bd0d2152db1ce9c8da70",
-      },
-      tracks_with_duplicates: tracks_with_duplicates,
-      total_duplicates: total_duplicates,
-    });
-  });
+    })
+  );
 
   console.log(artists_with_duplicates);
-  return artists_with_duplicates;
+  return new Promise((resolve) => resolve(artists_with_duplicates));
 }
 
 function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
@@ -118,7 +113,7 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
 
   playlist_tracks.map((entry) => {
     // Filter out playlist content that aren't tracks
-    if (!entry || !entry.track || !("album" in entry.track)) {
+    if (!entry || !entry.track || !('album' in entry.track)) {
       return;
     }
 
@@ -138,8 +133,8 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
     // Add album node to artist if it doesn't exist
     const artist_node = artist_dict[artist.id];
 
-    if (!(album.id in artist_node["album_nodes"])) {
-      artist_node["album_nodes"][album.id] = {
+    if (!(album.id in artist_node['album_nodes'])) {
+      artist_node['album_nodes'][album.id] = {
         name: album.name,
         track_nodes: [],
       };
@@ -147,8 +142,8 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
 
     // Add track to album node even if it exists
     // TODO: catch duplicates here
-    const album_node = artist_node["album_nodes"][album.id];
-    album_node["track_nodes"].push(track);
+    const album_node = artist_node['album_nodes'][album.id];
+    album_node['track_nodes'].push(track);
   });
 
   console.log(artist_dict);
