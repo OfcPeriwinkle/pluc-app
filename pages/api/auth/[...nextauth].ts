@@ -17,7 +17,6 @@ const authOptions: AuthOptions = {
     async jwt({ token, account }) {
       if (account) {
         // account is only present on the first call
-        console.log('Saving access_token to JWT...');
         token.access_token = account.access_token;
         token.expires_at = account.expires_at;
         token.refresh_token = account.refresh_token;
@@ -25,10 +24,9 @@ const authOptions: AuthOptions = {
 
       // Check access token validity
       if (token.expires_at && Math.floor(Date.now() / 1000) < token.expires_at) {
-        console.log('Access token is valid! Yay!');
         return token;
       } else if (!token.refresh_token) {
-        console.log('Access has expired and there is no refresh_token in JWT!');
+        console.error('Access has expired and there is no refresh_token in JWT!');
         return token;
       }
 
