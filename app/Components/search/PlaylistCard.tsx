@@ -1,4 +1,4 @@
-import { PlaylistContext } from '../Contexts/PlaylistContext';
+import { PlaylistContext } from '../../Contexts/PlaylistContext';
 import Image from 'next/image';
 import { useContext } from 'react';
 import { PlaylistTrack } from 'spotify-types';

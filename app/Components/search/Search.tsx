@@ -1,19 +1,17 @@
-"use client";
+'use client';
 
-import { PlaylistContext } from "../Contexts/PlaylistContext";
-import PlaylistSearchResults from "./PlaylistSearchResults";
-import { signOut } from "next-auth/react";
-import { useContext, useState } from "react";
-import type { SimplifiedPlaylist } from "spotify-types/typings/playlist";
+import { PlaylistContext } from '../../Contexts/PlaylistContext';
+import PlaylistSearchResults from './PlaylistSearchResults';
+import { signOut } from 'next-auth/react';
+import { useContext, useState } from 'react';
+import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
 
 interface PlaylistSearchResults {
   playlists: { items: SimplifiedPlaylist[] };
 }
 
 /** Contact pluc's API to search for a playlist_name */
-async function playlist_search(
-  playlist_name: string
-): Promise<PlaylistSearchResults | null> {
+async function playlist_search(playlist_name: string): Promise<PlaylistSearchResults | null> {
   const res = await fetch(`/api/playlist_search?q=${playlist_name}`);
 
   if (res.status !== 200) {
@@ -24,11 +22,11 @@ async function playlist_search(
 }
 
 export default function Search() {
-  const [playlist, setPlaylist] = useState("");
+  const [playlist, setPlaylist] = useState('');
   const { searchResults, setSearchResults } = useContext(PlaylistContext);
 
   async function handle_enter(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key !== "Enter") {
+    if (e.key !== 'Enter') {
       return;
     }
 
