@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import duplicate_results from "../../duplicate_results.json";
-import { ArtistWithDuplicates } from "../../lib/pluc_duplicates";
-import get_duplicates from "../../lib/pluc_duplicates";
-import { PlaylistContext } from "../Contexts/PlaylistContext";
-import ArtistDuplicates from "../sandbox/Components/ArtistDuplicates";
-import { useContext, useEffect, useState } from "react";
+import duplicate_results from '../../duplicate_results.json';
+import { ArtistWithDuplicates } from '../../lib/pluc_duplicates';
+import get_duplicates from '../../lib/pluc_duplicates';
+import { PlaylistContext } from '../Contexts/PlaylistContext';
+import ArtistDuplicates from '../sandbox/Components/ArtistDuplicates';
+import { useContext, useEffect, useState } from 'react';
 
 export default function DuplicatesModal({
   is_visible,
@@ -15,14 +15,12 @@ export default function DuplicatesModal({
   set_visibility: Function;
 }) {
   const { tracks, setTracks } = useContext(PlaylistContext);
-  const [duplicateResults, setDuplicateResults] = useState<
-    ArtistWithDuplicates[]
-  >([]);
+  const [duplicateResults, setDuplicateResults] = useState<ArtistWithDuplicates[]>([]);
 
   useEffect(() => {
     const artists_with_duplicates = get_duplicates(tracks);
     setDuplicateResults(artists_with_duplicates);
-    set_visibility(true);
+    set_visibility(tracks.length > 0);
   }, [tracks]);
 
   function handle_click() {
@@ -44,19 +42,17 @@ export default function DuplicatesModal({
         </button>
       </div>
       {duplicateResults.length ? (
-        duplicateResults.map(
-          ({ artist, tracks_with_duplicates, total_duplicates }, idx) => {
-            return (
-              <ArtistDuplicates
-                key={idx}
-                artist_name={artist.name}
-                artist_image={artist.image}
-                tracks_with_duplicates={tracks_with_duplicates}
-                total_duplicates={total_duplicates}
-              />
-            );
-          }
-        )
+        duplicateResults.map(({ artist, tracks_with_duplicates, total_duplicates }, idx) => {
+          return (
+            <ArtistDuplicates
+              key={idx}
+              artist_name={artist.name}
+              artist_image={artist.image}
+              tracks_with_duplicates={tracks_with_duplicates}
+              total_duplicates={total_duplicates}
+            />
+          );
+        })
       ) : (
         <p>No duplicates found!</p>
       )}
