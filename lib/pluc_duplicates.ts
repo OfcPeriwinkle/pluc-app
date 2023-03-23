@@ -104,7 +104,6 @@ export default async function get_duplicates(
     })
   );
 
-  console.log(artists_with_duplicates);
   return new Promise((resolve) => resolve(artists_with_duplicates));
 }
 
@@ -146,7 +145,6 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
     album_node['track_nodes'].push(track);
   });
 
-  console.log(artist_dict);
   return artist_dict;
 }
 

@@ -37,22 +37,12 @@ export default function Search() {
       return;
     }
 
-    console.log(search_results.playlists.items);
-
     // Get list of playlists and use them to set the React state
     setSearchResults(search_results.playlists.items);
   }
 
   return (
     <>
-      {/* TODO: remove this button, it's just for testing */}
-      <button
-        onClick={() => {
-          signOut();
-        }}
-      >
-        Log out
-      </button>
       <input
         className="align-center h-14 w-1/2 rounded-full pl-5 pr-5 text-2xl text-gray-dark shadow-lg"
         placeholder="Find a playlist"
