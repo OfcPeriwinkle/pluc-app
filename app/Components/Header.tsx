@@ -1,31 +1,33 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 interface HeaderProps {
-  links: { link: string; label: string }[];
+  links: { href: string; label: string }[];
 }
 
 export default function Header({ links }: HeaderProps) {
-  const [active, setActive] = useState(links[0].link);
+  // TODO: if user refreshes on non-home page, this state is incorrect
+  // Likely fix: use React context, or lift up the state to layout!
+  const [active, setActive] = useState(links[0].href);
 
   const items = links.map((link) => (
-    <a
+    <Link
       key={link.label}
-      href={link.link}
+      href={link.href}
       // TODO: having this as a flexbox is a little jank
       className={`${
-        active === link.link
+        active === link.href
           ? "text-gray bg-green "
           : "text-white hover:text-gray-light"
       } flex justify-center items-center h-full px-4 text-2xl font-bold`}
       onClick={(event) => {
-        event.preventDefault();
-        setActive(link.link);
+        setActive(link.href);
       }}
     >
       {link.label}
-    </a>
+    </Link>
   ));
 
   return (

@@ -1,6 +1,6 @@
-import "./globals.css";
 import Header from "./Components/Header";
 import ProvidersWrapper from "./Components/ProvidersWrapper";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -17,9 +17,10 @@ export default function RootLayout({
       <body className="bg-gradient-to-b from-gray-dark to-gray text-white tracking-tighter">
         <Header
           links={[
-            { label: "pluc", link: "/" },
-            { label: "coming soon", link: "/coming_soon" },
-            { label: "about", link: "/about" },
+            { label: "pluc", href: "/" },
+            { label: "sandbox", href: "/sandbox" },
+            { label: "coming soon", href: "/coming_soon" },
+            { label: "about", href: "/about" },
           ]}
         />
 
