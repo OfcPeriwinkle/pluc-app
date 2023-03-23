@@ -1,9 +1,9 @@
 'use client';
 
-import { ArtistWithDuplicates } from '../../lib/pluc_duplicates';
-import get_duplicates from '../../lib/pluc_duplicates';
-import { PlaylistContext } from '../Contexts/PlaylistContext';
-import ArtistDuplicates from '../sandbox/Components/ArtistDuplicates';
+import get_duplicates from '../../../lib/pluc_duplicates';
+import { ArtistWithDuplicates } from '../../../lib/pluc_duplicates';
+import { PlaylistContext } from '../../Contexts/PlaylistContext';
+import ArtistDuplicates from './ArtistDuplicates';
 import { useContext, useEffect, useState } from 'react';
 
 export default function DuplicatesModal({
