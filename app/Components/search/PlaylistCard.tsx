@@ -19,8 +19,6 @@ export default function PlaylistCard({
   const { tracks, setTracks } = useContext(PlaylistContext);
 
   async function handle_click() {
-    console.log(playlist_id);
-
     const res = await fetch(`/api/playlist_tracks?id=${playlist_id}`);
 
     if (res.status !== 200) {
