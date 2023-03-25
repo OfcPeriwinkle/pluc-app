@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { signIn } from "next-auth/react";
+import { signIn } from 'next-auth/react';
 
 export default function Login() {
   return (
-    <div>
+    <div className="mt-6 sm:mt-10 flex justify-center space-x-6 text-sm">
       <button
-        className="rounded-full bg-green font-medium text-xl p-4 hover:scale-105"
+        className="font-semibold h-12 px-6 rounded-full w-full flex items-center justify-center sm:w-auto bg-green hover:scale-105 focus:scale-95 ease-in-out duration-200"
         onClick={() => {
-          signIn("spotify");
+          signIn('spotify');
         }}
       >
         Login with Spotify

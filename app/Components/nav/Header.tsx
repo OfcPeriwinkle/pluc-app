@@ -31,7 +31,7 @@ export default function Header({ links }: HeaderProps) {
   ));
 
   return (
-    <header className="sticky top-0 flex justify-between items-center w-full h-16 mb-32 border-b-4 border-green bg-gray-dark">
+    <header className="sticky top-0 flex justify-between items-center w-full h-16 border-b-4 border-green bg-gray-dark z-10">
       <nav className="hidden sm:flex justify-start items-center h-full">
         {items}
         {session && (
