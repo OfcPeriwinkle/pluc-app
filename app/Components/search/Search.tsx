@@ -2,7 +2,6 @@
 
 import { PlaylistContext } from '../../Contexts/PlaylistContext';
 import PlaylistSearchResults from './PlaylistSearchResults';
-import { signOut } from 'next-auth/react';
 import { useContext, useState } from 'react';
 import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
 
@@ -42,10 +41,10 @@ export default function Search() {
   }
 
   return (
-    <>
+    <div className="mt-6 sm:mt-10 flex w-5/6 sm:w-1/2 justify-center text-sm">
       <input
-        className="align-center h-14 w-1/2 rounded-full pl-5 pr-5 text-2xl text-gray-dark shadow-lg"
-        placeholder="Find a playlist"
+        className="font-semibold h-12 w-full px-4 rounded-full bg-white text-gray-dark focus:outline-black"
+        placeholder="Search for a playlist"
         name="playlist"
         type="text"
         onChange={(e) => {
@@ -53,7 +52,7 @@ export default function Search() {
         }}
         onKeyDown={handle_enter}
       />
-      {searchResults && <PlaylistSearchResults playlists={searchResults} />}
-    </>
+      {searchResults.length > 0 && <PlaylistSearchResults playlists={searchResults} />}
+    </div>
   );
 }
