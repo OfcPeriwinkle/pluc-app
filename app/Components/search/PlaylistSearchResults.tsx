@@ -16,7 +16,7 @@ export default function PlaylistSearchResults({ playlists }: PlaylistSearchResul
   });
 
   return (
-    <div className="flex flex-wrap justify-center items-center gap-10 mt-6 sm:mt-10">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-10">
       {processed_playlists.map((playlist_details, index) => {
         return (
           <PlaylistCard

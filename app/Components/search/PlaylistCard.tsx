@@ -31,7 +31,11 @@ export default function PlaylistCard({
 
   return (
     <div>
-      <button className="flex flex-col justify-center items-center p-4 bg-gray rounded-lg w-52">
+      <button
+        className="flex flex-col justify-center items-center p-4 bg-gray rounded-lg w-52"
+        name={`${playlist_name} by ${user_display_name}`}
+        type="button"
+      >
         <Image
           src={playlist_image_url}
           width={160}
@@ -39,7 +43,7 @@ export default function PlaylistCard({
           alt="Playlist Image"
           className="h-44 w-44 object-contain" // object-contain is needed for Spotify approval
         />
-        <section className="mt-2 w-full text-start">
+        <section className="mt-2 w-full text-start truncate ">
           <h3 className="truncate w-full font-semibold">{playlist_name}</h3>
           <p className="truncate w-full text-gray-light">{user_display_name}</p>
         </section>
