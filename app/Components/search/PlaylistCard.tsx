@@ -35,6 +35,7 @@ export default function PlaylistCard({
         className="flex flex-col justify-center items-center p-4 bg-gray-light rounded-lg w-52 bg-opacity-5 hover:bg-opacity-25 focus:bg-opacity-25 transition duration-200 ease-in-out focus:scale-95"
         name={`${playlist_name} by ${user_display_name}`}
         type="button"
+        onClick={handle_click}
       >
         <Image
           src={playlist_image_url}

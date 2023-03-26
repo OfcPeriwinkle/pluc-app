@@ -1,4 +1,5 @@
 import PlaylistCard from './PlaylistCard';
+import { Suspense } from 'react';
 import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
 
 export interface PlaylistSearchResultsProps {
@@ -25,7 +26,7 @@ export default function PlaylistSearchResults({ playlists }: PlaylistSearchResul
             playlist_image_url={playlist_details.playlist_image_url}
             playlist_name={playlist_details.playlist_name}
             user_display_name={playlist_details.display_name}
-          ></PlaylistCard>
+          />
         );
       })}
     </div>
