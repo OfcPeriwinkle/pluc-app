@@ -42,9 +42,9 @@ export default function PlaylistCard({
           width={160}
           height={160}
           alt="Playlist Image"
-          className="h-44 w-44 object-contain" // object-contain is needed for Spotify approval
+          className="h-44 w-44 object-cover"
         />
-        <section className="mt-2 w-full text-start truncate ">
+        <section className="mt-2 w-full text-start truncate">
           <h3 className="truncate w-full font-semibold">{playlist_name}</h3>
           <p className="truncate w-full text-gray-light">{user_display_name}</p>
         </section>

@@ -1,5 +1,5 @@
-import DuplicateTrackCard from "./DuplicateTrackCard";
-import { Track } from "spotify-types";
+import DuplicateTrackCard from './DuplicateTrackCard';
+import { Track } from 'spotify-types';
 
 export default function DuplicateTrackSection({
   section_name,
@@ -9,14 +9,19 @@ export default function DuplicateTrackSection({
   duplicates: Track[];
 }) {
   return (
+    // <div className="bg-gray-light rounded-md bg-opacity-5 p-4">
     <>
-      <hr className="border-gray-light border-opacity-30" />
-      <h1 className="text-3xl font-bold">{section_name}</h1>
-      <div className="flex flex-wrap items-center justify-center gap-5">
+      <h2 className="text-xl font-bold mt-6">{section_name}</h2>
+      <section className="grid grid-cols-2 justify-center items-center gap-4 mt-4">
         {duplicates.map((duplicate) => {
-          return <DuplicateTrackCard key={duplicate.id} track={duplicate} />;
+          return (
+            <div className="flex justify-center items-center">
+              <DuplicateTrackCard key={duplicate.id} track={duplicate} />
+            </div>
+          );
         })}
-      </div>
+      </section>
     </>
+    // </div>
   );
 }
