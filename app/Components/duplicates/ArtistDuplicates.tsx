@@ -14,7 +14,7 @@ export default function ArtistDuplicates({
   total_duplicates: number;
 }) {
   return (
-    <section className="mt-14 sm:bg-gray sm:bg-opacity-25 sm:rounded-md sm:p-6">
+    <section className="sm:bg-gray sm:bg-opacity-25 sm:rounded-md sm:p-6 mb-24 mt-4 sm:mb-14">
       <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-center bg-gray-light bg-opacity-5 sm:bg-opacity-0 rounded-md p-4 sm:p-0 w-full gap-4">
         <Image
           src={artist_image}

@@ -7,10 +7,10 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
   const image = track.album.images[0];
 
   return (
-    <button className="flex flex-col justify-center items-center p-2 sm:p-4 w-40 sm:w-64 bg-gray-light bg-opacity-10 rounded-md">
+    <button className="flex flex-col justify-center items-center p-2 sm:p-4 w-40 sm:w-64 bg-gray-light bg-opacity-10 rounded-md hover:bg-opacity-25 ease-in-out duration-200 focus:scale-95">
       <Image
         src={image.url}
-        alt={`Album Art for ${track.name}`}
+        alt={`${track.album.name} Artwork`}
         width={160}
         height={160}
         className="h-36 w-36 sm:h-56 sm:w-56 object-contain"
