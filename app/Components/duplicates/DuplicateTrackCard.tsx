@@ -3,7 +3,13 @@
 import Image from 'next/image';
 import { Track } from 'spotify-types';
 
-export default function DuplicateTrackCard({ track }: { track: Track }) {
+export default function DuplicateTrackCard({
+  track,
+  added_at,
+}: {
+  track: Track;
+  added_at: string | null;
+}) {
   const image = track.album.images[0];
 
   return (
@@ -18,6 +24,7 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
       <section className="text-start mt-2 w-full">
         <h3 className="truncate w-full font-semibold sm:text-lg sm:mt-2">{track.name}</h3>
         <p className="truncate w-full text-gray-light sm:text-lg">{track.album.name}</p>
+        {added_at && <p className="truncate w-full text-gray-light sm:text-lg">{added_at}</p>}
       </section>
     </button>
   );
