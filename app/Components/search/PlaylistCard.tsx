@@ -32,7 +32,7 @@ export default function PlaylistCard({
   return (
     <div>
       <button
-        className="flex flex-col justify-center items-center p-4 bg-gray-light rounded-lg w-52 bg-opacity-5 hover:bg-opacity-25 focus:bg-opacity-25 transition duration-200 ease-in-out focus:scale-95"
+        className="flex w-52 flex-col items-center justify-center rounded-lg bg-gray-light bg-opacity-5 p-4 transition duration-200 ease-in-out hover:bg-opacity-25 focus:scale-95 focus:bg-opacity-25"
         name={`${playlist_name} by ${user_display_name}`}
         type="button"
         onClick={handle_click}
@@ -44,9 +44,9 @@ export default function PlaylistCard({
           alt="Playlist Image"
           className="h-44 w-44 object-cover"
         />
-        <section className="mt-2 w-full text-start truncate">
-          <h3 className="truncate w-full font-semibold">{playlist_name}</h3>
-          <p className="truncate w-full text-gray-light">{user_display_name}</p>
+        <section className="mt-2 w-full truncate text-start">
+          <h3 className="w-full truncate font-semibold">{playlist_name}</h3>
+          <p className="w-full truncate text-gray-light">{user_display_name}</p>
         </section>
       </button>
     </div>

@@ -2,7 +2,11 @@ import ProvidersWrapper from './Components/auth/ProvidersWrapper';
 import Header from './Components/nav/Header';
 import './globals.css';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       {/*
@@ -10,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className="bg-gray-dark text-white tracking-tighter">
+      <body className="bg-gray-dark tracking-tighter text-white">
         <ProvidersWrapper>
           <Header
             links={[

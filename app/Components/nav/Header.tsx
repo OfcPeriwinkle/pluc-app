@@ -20,8 +20,10 @@ export default function Header({ links }: HeaderProps) {
       key={link.label}
       href={link.href}
       className={`${
-        active === link.href ? 'sm:text-gray sm:bg-green ' : 'text-white hover:text-gray-light'
-      } flex justify-center items-center h-full sm:px-4 text-2xl font-bold`}
+        active === link.href
+          ? 'sm:bg-green sm:text-gray '
+          : 'text-white hover:text-gray-light'
+      } flex h-full items-center justify-center text-2xl font-bold sm:px-4`}
       onClick={(event) => {
         setActive(link.href);
       }}
@@ -31,12 +33,12 @@ export default function Header({ links }: HeaderProps) {
   ));
 
   return (
-    <header className="sticky top-0 w-full h-16 border-b-4 border-green bg-gray-dark z-10">
-      <nav className="hidden sm:flex h-full justify-between w-full">
-        <div className="flex justify-start h-full">{items}</div>
+    <header className="sticky top-0 z-10 h-16 w-full border-b-4 border-green bg-gray-dark">
+      <nav className="hidden h-full w-full justify-between sm:flex">
+        <div className="flex h-full justify-start">{items}</div>
         {session && (
           <button
-            className="flex justify-center items-center h-full px-4 text-2xl font-bold text-white hover:text-gray-light"
+            className="flex h-full items-center justify-center px-4 text-2xl font-bold text-white hover:text-gray-light"
             name="Log Out"
             onClick={() => signOut()}
           >
@@ -45,10 +47,10 @@ export default function Header({ links }: HeaderProps) {
         )}
       </nav>
       {/* Mobile Nav */}
-      <nav className="sm:hidden w-full h-full">
-        <ul className="flex justify-between items-center h-full w-full px-4 sm:hidden">
+      <nav className="h-full w-full sm:hidden">
+        <ul className="flex h-full w-full items-center justify-between px-4 sm:hidden">
           <li className="h-full">{items[0]}</li>
-          <li className="flex items-center h-full">
+          <li className="flex h-full items-center">
             <button className="h-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +58,7 @@ export default function Header({ links }: HeaderProps) {
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="h-6 w-6"
               >
                 <path
                   stroke-linecap="round"

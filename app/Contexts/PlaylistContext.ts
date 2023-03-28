@@ -1,5 +1,5 @@
-import { createContext } from "react";
-import { PlaylistTrack, SimplifiedPlaylist, Track } from "spotify-types";
+import { createContext } from 'react';
+import { PlaylistTrack, SimplifiedPlaylist, Track } from 'spotify-types';
 
 export const PlaylistContext = createContext<{
   tracks: PlaylistTrack[];

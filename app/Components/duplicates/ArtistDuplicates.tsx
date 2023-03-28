@@ -14,18 +14,18 @@ export default function ArtistDuplicates({
   total_duplicates: number;
 }) {
   return (
-    <section className="sm:bg-gray sm:bg-opacity-25 sm:rounded-md sm:p-6 mb-24 mt-4 sm:mb-14">
-      <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-center bg-gray-light bg-opacity-5 sm:bg-opacity-0 rounded-md p-4 sm:p-0 w-full gap-4">
+    <section className="mb-24 mt-4 sm:mb-14 sm:rounded-md sm:bg-gray sm:bg-opacity-25 sm:p-6">
+      <div className="flex w-full flex-col items-center justify-center gap-4 rounded-md bg-gray-light bg-opacity-5 p-4 sm:flex-row sm:justify-start sm:bg-opacity-0 sm:p-0">
         <Image
           src={artist_image}
           alt="Artist image"
           width={160}
           height={160}
-          className="w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-full"
+          className="h-32 w-32 rounded-full object-cover sm:h-40 sm:w-40"
         />
         <div className="flex flex-col items-start justify-center">
-          <h2 className="text-xl sm:text-2xl font-bold">{artist_name}</h2>
-          <p className="text-lg sm:text-xl text-gray-light">
+          <h2 className="text-xl font-bold sm:text-2xl">{artist_name}</h2>
+          <p className="text-lg text-gray-light sm:text-xl">
             {`${tracks_with_duplicates.length} track${
               tracks_with_duplicates.length !== 1 ? 's' : ''
             } with ${total_duplicates} potential duplicates`}

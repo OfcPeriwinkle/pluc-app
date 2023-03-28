@@ -10,7 +10,9 @@ interface PlaylistSearchResults {
 }
 
 /** Contact pluc's API to search for a playlist_name */
-async function playlist_search(playlist_name: string): Promise<PlaylistSearchResults | null> {
+async function playlist_search(
+  playlist_name: string
+): Promise<PlaylistSearchResults | null> {
   const res = await fetch(`/api/playlist_search?q=${playlist_name}`);
 
   if (res.status !== 200) {
@@ -41,10 +43,10 @@ export default function Search() {
   }
 
   return (
-    <section className="mt-6 sm:mt-10 w-full flex justify-center items-center flex-col">
-      <div className="mt-6 w-5/6 sm:w-1/2 text-sm">
+    <section className="mt-6 flex w-full flex-col items-center justify-center sm:mt-10">
+      <div className="mt-6 w-5/6 text-sm sm:w-1/2">
         <input
-          className="font-semibold h-12 w-full px-4 rounded-full bg-white text-gray-dark focus:outline-black"
+          className="h-12 w-full rounded-full bg-white px-4 font-semibold text-gray-dark focus:outline-black"
           placeholder="Search for a playlist"
           name="playlist"
           type="text"
@@ -54,7 +56,9 @@ export default function Search() {
           onKeyDown={handle_enter}
         />
       </div>
-      {searchResults.length > 0 && <PlaylistSearchResults playlists={searchResults} />}
+      {searchResults.length > 0 && (
+        <PlaylistSearchResults playlists={searchResults} />
+      )}
     </section>
   );
 }

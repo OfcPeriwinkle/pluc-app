@@ -6,7 +6,9 @@ export interface PlaylistSearchResultsProps {
   playlists: SimplifiedPlaylist[];
 }
 
-export default function PlaylistSearchResults({ playlists }: PlaylistSearchResultsProps) {
+export default function PlaylistSearchResults({
+  playlists,
+}: PlaylistSearchResultsProps) {
   const processed_playlists = playlists.map((playlist) => {
     return {
       playlist_id: playlist.id,
@@ -17,7 +19,7 @@ export default function PlaylistSearchResults({ playlists }: PlaylistSearchResul
   });
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-10">
+    <div className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {processed_playlists.map((playlist_details, index) => {
         return (
           <PlaylistCard

@@ -4,9 +4,9 @@ import { signIn } from 'next-auth/react';
 
 export default function Login() {
   return (
-    <div className="mt-6 sm:mt-10 flex justify-center space-x-6 text-sm">
+    <div className="mt-6 flex justify-center space-x-6 text-sm sm:mt-10">
       <button
-        className="font-semibold h-12 px-6 rounded-full w-full flex items-center justify-center sm:w-auto bg-green hover:scale-105 focus:scale-95 ease-in-out duration-200"
+        className="flex h-12 w-full items-center justify-center rounded-full bg-green px-6 font-semibold duration-200 ease-in-out hover:scale-105 focus:scale-95 sm:w-auto"
         onClick={() => {
           signIn('spotify');
         }}
