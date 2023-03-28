@@ -96,7 +96,7 @@ export default async function get_duplicates(
       artists_with_duplicates.push({
         artist: {
           name: artist_details.name,
-          image: artist_details.images[0].url,
+          image: artist_details.images[0].url, // TODO: handle case where artist has no images
         },
         tracks_with_duplicates: tracks_with_duplicates,
         total_duplicates: total_duplicates,
