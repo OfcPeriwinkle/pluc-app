@@ -2,7 +2,6 @@
 
 import { PlaylistContext } from '../../Contexts/PlaylistContext';
 import PlaylistSearchResults from './PlaylistSearchResults';
-import { signOut } from 'next-auth/react';
 import { useContext, useState } from 'react';
 import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
 
@@ -42,18 +41,20 @@ export default function Search() {
   }
 
   return (
-    <>
-      <input
-        className="align-center h-14 w-1/2 rounded-full pl-5 pr-5 text-2xl text-gray-dark shadow-lg"
-        placeholder="Find a playlist"
-        name="playlist"
-        type="text"
-        onChange={(e) => {
-          setPlaylist(e.target.value);
-        }}
-        onKeyDown={handle_enter}
-      />
-      {searchResults && <PlaylistSearchResults playlists={searchResults} />}
-    </>
+    <section className="mt-6 sm:mt-10 w-full flex justify-center items-center flex-col">
+      <div className="mt-6 w-5/6 sm:w-1/2 text-sm">
+        <input
+          className="font-semibold h-12 w-full px-4 rounded-full bg-white text-gray-dark focus:outline-black"
+          placeholder="Search for a playlist"
+          name="playlist"
+          type="text"
+          onChange={(e) => {
+            setPlaylist(e.target.value);
+          }}
+          onKeyDown={handle_enter}
+        />
+      </div>
+      {searchResults.length > 0 && <PlaylistSearchResults playlists={searchResults} />}
+    </section>
   );
 }

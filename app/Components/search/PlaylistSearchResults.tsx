@@ -1,24 +1,23 @@
-import PlaylistCard from "./PlaylistCard";
-import type { SimplifiedPlaylist } from "spotify-types/typings/playlist";
+import PlaylistCard from './PlaylistCard';
+import { Suspense } from 'react';
+import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
 
 export interface PlaylistSearchResultsProps {
   playlists: SimplifiedPlaylist[];
 }
 
-export default function PlaylistSearchResults({
-  playlists,
-}: PlaylistSearchResultsProps) {
+export default function PlaylistSearchResults({ playlists }: PlaylistSearchResultsProps) {
   const processed_playlists = playlists.map((playlist) => {
     return {
       playlist_id: playlist.id,
       playlist_image_url: playlist.images[0].url,
       playlist_name: playlist.name,
-      display_name: playlist.owner.display_name ?? "No Name",
+      display_name: playlist.owner.display_name ?? 'No Name',
     };
   });
 
   return (
-    <div className="flex flex-wrap justify-center items-center gap-10 p-14">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 mt-10">
       {processed_playlists.map((playlist_details, index) => {
         return (
           <PlaylistCard
@@ -27,7 +26,7 @@ export default function PlaylistSearchResults({
             playlist_image_url={playlist_details.playlist_image_url}
             playlist_name={playlist_details.playlist_name}
             user_display_name={playlist_details.display_name}
-          ></PlaylistCard>
+          />
         );
       })}
     </div>

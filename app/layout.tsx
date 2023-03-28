@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className="bg-gradient-to-b from-gray-dark to-gray text-white tracking-tighter">
+      <body className="bg-gray-dark text-white tracking-tighter">
         <ProvidersWrapper>
           <Header
             links={[
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               { label: 'about', href: '/about' },
             ]}
           />
-          {children}
+          <main>{children}</main>
         </ProvidersWrapper>
       </body>
     </html>

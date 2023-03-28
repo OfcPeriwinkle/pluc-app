@@ -32,15 +32,31 @@ export default function DuplicatesModal({
   }
 
   return (
-    <div className="mx-20 flex flex-col items-center justify-center gap-10 rounded-xl bg-gray px-20 pb-20 pt-5">
-      <div className="flex w-full justify-end">
+    <section className="mt-10 w-full">
+      <nav className="grid grid-cols-3 items-center">
         <button
+          name="back"
+          type="button"
+          className="rounded-full bg-gray-light bg-opacity-10 w-10 h-10 flex justify-center items-center hover:bg-opacity-50 ease-in-out transition duration-200"
           onClick={handle_click}
-          className="h-10 w-10 rounded-full bg-gray-light bg-opacity-20 text-xl duration-200 ease-in-out hover:bg-opacity-40"
         >
-          ✖
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+            />
+          </svg>
         </button>
-      </div>
+        <h2 className="text-2xl font-bold text-center">Results</h2>
+      </nav>
       {duplicateResults.length ? (
         duplicateResults.map(({ artist, tracks_with_duplicates, total_duplicates }, idx) => {
           return (
@@ -56,6 +72,6 @@ export default function DuplicatesModal({
       ) : (
         <p>No duplicates found!</p>
       )}
-    </div>
+    </section>
   );
 }
