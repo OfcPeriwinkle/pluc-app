@@ -8,7 +8,7 @@ export default function Home() {
           Keep the tunes, <span>pluc</span> the noise.
         </h1>
         <p className="mt-6 text-lg text-center max-w-3xl mx-auto text-gray-light font-medium">
-          If you love music, your playlists are a huge part of your day to day, so why let them fill
+          If you love music, your playlists are a huge part of your day to day. So why let them fill
           up with clutter? <span>pluc keeps your playlists squeaky clean</span> by detecting
           multiple versions of the same track that Spotify missed, letting you share your favorite
           songs without the static.
