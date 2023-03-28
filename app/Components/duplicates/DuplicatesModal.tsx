@@ -37,7 +37,7 @@ export default function DuplicatesModal({
         <button
           name="back"
           type="button"
-          className="rounded-full bg-gray-light bg-opacity-30 w-10 h-10 flex justify-center items-center hover:bg-opacity-50 ease-in-out transition duration-200"
+          className="rounded-full bg-gray-light bg-opacity-10 w-10 h-10 flex justify-center items-center hover:bg-opacity-50 ease-in-out transition duration-200"
           onClick={handle_click}
         >
           <svg

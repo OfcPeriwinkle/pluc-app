@@ -14,18 +14,18 @@ export default function ArtistDuplicates({
   total_duplicates: number;
 }) {
   return (
-    <section className="mt-14">
-      <div className="flex flex-col justify-center items-center bg-gray-light bg-opacity-5 rounded-md p-4 w-full gap-4">
+    <section className="mt-14 sm:bg-gray sm:bg-opacity-25 sm:rounded-md sm:p-6">
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-center bg-gray-light bg-opacity-5 sm:bg-opacity-0 rounded-md p-4 sm:p-0 w-full gap-4">
         <Image
           src={artist_image}
           alt="Artist image"
           width={160}
           height={160}
-          className="w-32 h-32 object-cover rounded-full"
+          className="w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-full"
         />
         <div className="flex flex-col items-start justify-center">
-          <h2 className="text-xl font-bold">{artist_name}</h2>
-          <p className="text-lg text-gray-light">
+          <h2 className="text-xl sm:text-2xl font-bold">{artist_name}</h2>
+          <p className="text-lg sm:text-xl text-gray-light">
             {`${tracks_with_duplicates.length} track${
               tracks_with_duplicates.length !== 1 ? 's' : ''
             } with ${total_duplicates} potential duplicates`}
@@ -42,9 +42,6 @@ export default function ArtistDuplicates({
           />
         );
       })}
-      <div className="flex justify-center items-center">
-        <hr className="mt-4 border-gray-light border-2 border-opacity-25 w-1/2 rounded-full" />
-      </div>
     </section>
   );
 }

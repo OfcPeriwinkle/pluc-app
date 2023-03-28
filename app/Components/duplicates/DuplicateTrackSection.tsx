@@ -11,8 +11,9 @@ export default function DuplicateTrackSection({
   return (
     // <div className="bg-gray-light rounded-md bg-opacity-5 p-4">
     <>
-      <h2 className="text-xl font-bold mt-6">{section_name}</h2>
-      <section className="grid grid-cols-2 justify-center items-center gap-4 mt-4">
+      <h2 className="text-xl font-bold mt-6 sm:text-2xl">{section_name}</h2>
+      <hr className="border-gray-light border-opacity-20 mt-2 mb-4 border-2 rounded-full" />
+      <section className="grid grid-cols-2 justify-center items-center sm:flex gap-4 mt-4">
         {duplicates.map((duplicate) => {
           return (
             <div className="flex justify-center items-center">
