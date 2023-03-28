@@ -8,9 +8,10 @@ export default function Home() {
           Keep the tunes, <span>pluc</span> the noise.
         </h1>
         <p className="mt-6 text-lg text-center max-w-3xl mx-auto text-gray-light font-medium">
-          Lorem ipsum dolor sit amet, <span>consectetur adipiscing elit</span>, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-          exercitation ullamco laboris.
+          If you love music, your playlists are a huge part of your day to day, so why let them fill
+          up with clutter? <span>pluc keeps your playlists squeaky clean</span> by detecting
+          multiple versions of the same track that Spotify missed, letting you share your favorite
+          songs without the static.
         </p>
 
         {/* SearchOrLogin is a client component and not part of SSR */}
