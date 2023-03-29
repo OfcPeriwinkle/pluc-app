@@ -27,10 +27,10 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
           className="h-36 w-36 object-contain sm:h-56 sm:w-56"
         />
         <section className="mt-2 w-full text-start">
-          <h3 className="w-full truncate font-semibold sm:mt-2 sm:text-lg">
+          <h3 className="mt-2 w-full truncate font-semibold sm:text-lg">
             {track.name}
           </h3>
-          <p className="w-full truncate text-gray-light sm:text-lg">
+          <p className="mt-2 w-full truncate text-gray-light sm:text-lg">
             {track.album.name}
           </p>
         </section>
