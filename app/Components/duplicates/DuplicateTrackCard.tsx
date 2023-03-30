@@ -16,7 +16,7 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
   return (
     <>
       <button
-        className="flex w-40 flex-col items-center justify-center rounded-md bg-gray-light bg-opacity-10 p-2 duration-200 ease-in-out hover:bg-opacity-25 focus:scale-95 sm:w-64 sm:p-4"
+        className="flex w-full flex-col items-center justify-center rounded-md bg-gray bg-opacity-25 p-4 duration-200 ease-in-out hover:bg-opacity-100 focus:scale-95 sm:w-64 sm:bg-gray-light sm:bg-opacity-10 sm:p-4 sm:hover:bg-opacity-25"
         onClick={handle_click}
       >
         <Image
