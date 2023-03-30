@@ -2,11 +2,15 @@
 
 import { useSession } from 'next-auth/react';
 import { signOut, signIn } from 'next-auth/react';
-import { useState } from 'react';
 import { Popover } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
 
-export default function MobileMenu() {
+export default function MobileMenu({
+  links,
+}: {
+  links: { href: string; label: string }[];
+}) {
   const { data: session } = useSession();
 
   return (
@@ -31,7 +35,17 @@ export default function MobileMenu() {
           )}
           <Popover.Panel className="absolute z-10 w-64 -translate-x-56 translate-y-6 rounded-md bg-gray">
             <nav className="flex flex-col items-start justify-center gap-4 rounded-md p-4">
-              <a
+              {links.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="flex h-11 w-full items-center justify-start p-4 text-xl font-semibold"
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* <a
                 href="test"
                 className="flex h-11 w-full items-center justify-start p-4 text-xl font-semibold"
               >
@@ -42,7 +56,7 @@ export default function MobileMenu() {
                 className="flex h-11 w-full items-center justify-start p-4 text-xl font-semibold"
               >
                 about
-              </a>
+              </a> */}
               <div className="w-full border-t-2 border-gray-light border-opacity-50">
                 {session && (
                   <button

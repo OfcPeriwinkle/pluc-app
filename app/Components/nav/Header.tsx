@@ -52,7 +52,7 @@ export default function Header({ links }: HeaderProps) {
         <ul className="flex h-full w-full items-center justify-between px-4 sm:hidden">
           <li className="h-full">{items[0]}</li>
           <li className="flex h-full items-center">
-            <MobileMenu />
+            <MobileMenu links={links} />
           </li>
         </ul>
       </nav>
