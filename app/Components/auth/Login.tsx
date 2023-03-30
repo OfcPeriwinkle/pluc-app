@@ -11,7 +11,7 @@ export default function Login() {
           signIn('spotify');
         }}
       >
-        Login with Spotify
+        Sign in with Spotify
       </button>
     </div>
   );

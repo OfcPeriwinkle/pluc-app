@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
+import MobileMenu from './MobileMenu';
 
 interface HeaderProps {
   links: { href: string; label: string }[];
@@ -39,10 +40,10 @@ export default function Header({ links }: HeaderProps) {
         {session && (
           <button
             className="flex h-full items-center justify-center px-4 text-2xl font-bold text-white hover:text-gray-light"
-            name="Log Out"
+            name="Sign Out"
             onClick={() => signOut()}
           >
-            log out
+            sign out
           </button>
         )}
       </nav>
@@ -51,22 +52,7 @@ export default function Header({ links }: HeaderProps) {
         <ul className="flex h-full w-full items-center justify-between px-4 sm:hidden">
           <li className="h-full">{items[0]}</li>
           <li className="flex h-full items-center">
-            <button className="h-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                className="h-6 w-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
-              </svg>
-            </button>
+            <MobileMenu />
           </li>
         </ul>
       </nav>
