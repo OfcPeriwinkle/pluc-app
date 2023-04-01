@@ -5,6 +5,8 @@ import { ArtistWithDuplicates } from '../../../lib/pluc_duplicates';
 import { PlaylistContext } from '../../Contexts/PlaylistContext';
 import ArtistDuplicates from './ArtistDuplicates';
 import { useContext, useEffect, useState } from 'react';
+import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import { MegaphoneIcon } from '@heroicons/react/24/outline';
 
 export default function DuplicatesModal({
   is_visible,
@@ -42,22 +44,18 @@ export default function DuplicatesModal({
           className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-light bg-opacity-10 transition duration-200 ease-in-out hover:bg-opacity-50"
           onClick={handle_click}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-            />
-          </svg>
+          <ArrowLeftIcon className="h-6 w-6" />
         </button>
         <h2 className="text-center text-2xl font-bold">Results</h2>
+        <div className="flex justify-end">
+          <button
+            name="feedback"
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-light bg-opacity-10 transition duration-200 ease-in-out hover:bg-opacity-50"
+          >
+            <MegaphoneIcon className="h-6 w-6" />
+          </button>
+        </div>
       </nav>
       {duplicateResults.length ? (
         duplicateResults.map(
