@@ -5,6 +5,9 @@ import { ArtistWithDuplicates } from '../../../lib/pluc_duplicates';
 import { PlaylistContext } from '../../Contexts/PlaylistContext';
 import ArtistDuplicates from './ArtistDuplicates';
 import { useContext, useEffect, useState } from 'react';
+import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import { MegaphoneIcon } from '@heroicons/react/24/outline';
+import FeedbackModal from '../overlays/FeedbackModal';
 
 export default function DuplicatesModal({
   is_visible,
@@ -14,6 +17,7 @@ export default function DuplicatesModal({
   set_visibility: Function;
 }) {
   const { tracks, setTracks } = useContext(PlaylistContext);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [duplicateResults, setDuplicateResults] = useState<
     ArtistWithDuplicates[]
   >([]);
@@ -34,48 +38,50 @@ export default function DuplicatesModal({
   }
 
   return (
-    <section className="mt-10 w-full">
-      <nav className="grid grid-cols-3 items-center">
-        <button
-          name="back"
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-light bg-opacity-10 transition duration-200 ease-in-out hover:bg-opacity-50"
-          onClick={handle_click}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="h-6 w-6"
+    <>
+      <FeedbackModal open={feedbackOpen} setOpen={setFeedbackOpen} />
+      <section className="mt-10 w-full">
+        <nav className="grid grid-cols-3 items-center">
+          <button
+            name="back"
+            type="button"
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-light bg-opacity-10 transition duration-200 ease-in-out hover:bg-opacity-50 sm:h-10 sm:w-10"
+            onClick={handle_click}
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-            />
-          </svg>
-        </button>
-        <h2 className="text-center text-2xl font-bold">Results</h2>
-      </nav>
-      {duplicateResults.length ? (
-        duplicateResults.map(
-          ({ artist, tracks_with_duplicates, total_duplicates }, idx) => {
-            return (
-              <ArtistDuplicates
-                key={idx}
-                artist_name={artist.name}
-                artist_image={artist.image}
-                tracks_with_duplicates={tracks_with_duplicates}
-                total_duplicates={total_duplicates}
-              />
-            );
-          }
-        )
-      ) : (
-        <p>No duplicates found!</p>
-      )}
-    </section>
+            <ArrowLeftIcon className="h-10 w-10 sm:h-6 sm:w-6" />
+          </button>
+          <h2 className="text-center text-2xl font-bold">Results</h2>
+          <div className="flex justify-end">
+            <button
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-light bg-opacity-10 transition duration-200 ease-in-out hover:bg-opacity-50 sm:h-10 sm:w-10"
+              onClick={() => setFeedbackOpen(true)}
+              name="feedback"
+              type="button"
+            >
+              <MegaphoneIcon className="h-10 w-10 sm:h-6 sm:w-6" />
+            </button>
+          </div>
+        </nav>
+        {duplicateResults.length ? (
+          duplicateResults.map(
+            ({ artist, tracks_with_duplicates, total_duplicates }, idx) => {
+              return (
+                <ArtistDuplicates
+                  key={idx}
+                  artist_name={artist.name}
+                  artist_image={artist.image}
+                  tracks_with_duplicates={tracks_with_duplicates}
+                  total_duplicates={total_duplicates}
+                />
+              );
+            }
+          )
+        ) : (
+          <h2 className="mt-4 w-full text-center text-xl font-semibold">
+            No duplicates found!
+          </h2>
+        )}
+      </section>
+    </>
   );
 }
