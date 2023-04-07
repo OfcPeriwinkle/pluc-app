@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import {
   HandThumbDownIcon,
@@ -10,9 +10,35 @@ import {
 const CHAR_LIMIT = 200;
 
 enum Thumbs {
-  NONE,
-  UP,
   DOWN,
+  UP,
+  NONE,
+}
+
+async function handle_submit(
+  thumbs_up: Thumbs,
+  message: string,
+  playlist_id: string = 'test_playlist_id'
+): Promise<boolean> {
+  const res = await fetch('/api/submit_feedback', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      thumbs_up,
+      message,
+      playlist_id,
+    }),
+  });
+
+  if (!res.ok) {
+    alert('Error submitting feedback');
+    return new Promise((resolve) => resolve(false));
+  }
+
+  alert('Feedback submitted!');
+  return new Promise((resolve) => resolve(true));
 }
 
 export default function FeedbackModal({
@@ -44,7 +70,29 @@ export default function FeedbackModal({
             feedback about your results, fire away!
           </Dialog.Description>
 
-          <form className="mt-4">
+          <form
+            className="mt-4"
+            method="post"
+            onSubmit={async (e: FormEvent) => {
+              //  Prevent page refresh
+              e.preventDefault();
+
+              const form = e.target;
+              const message = form.message.value;
+
+              if (thumbs == Thumbs.NONE) {
+                alert('Please select a thumbs up or thumbs down.');
+                return;
+              }
+
+              const res = await handle_submit(thumbs, message);
+
+              if (res) {
+                setThumbs(Thumbs.NONE);
+                setOpen(false);
+              }
+            }}
+          >
             <div className="flex w-full items-center justify-center gap-4">
               <button
                 className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-white transition duration-200 ease-in-out hover:scale-105 ${
@@ -75,6 +123,7 @@ export default function FeedbackModal({
                   ? 'border-2 border-red-600 focus:outline-none'
                   : ''
               }`}
+              name="message"
               placeholder="Enter optional feedback message..."
               ref={textarea_ref}
               onChange={(e) => setCharCount(e.target.value.length)}
@@ -88,9 +137,8 @@ export default function FeedbackModal({
             <div className="mt-4 flex flex-col justify-around gap-4 sm:flex-row-reverse">
               <button
                 className="h-11 rounded-full bg-green font-semibold duration-200 ease-in-out hover:scale-105 sm:h-12 sm:w-40"
-                onClick={() => setOpen(false)}
                 name="submit"
-                type="button"
+                type="submit"
               >
                 Send
               </button>
