@@ -28,11 +28,11 @@ export default async function submit_feedback(
 
   if (message.length > Number(process.env.MAX_FEEDBACK_LENGTH)) {
     return res.status(400).json({
-      error: `Feedback message must be less than ${process.env.MAX_FEEDBACK_LENGTH} characters`,
+      error: `Feedback message must be at most ${process.env.MAX_FEEDBACK_LENGTH} characters`,
     });
   }
 
-  if (process.env.MONGODB_URI === undefined) {
+  if (!process.env.MONGODB_URI) {
     return res.status(500).json({ error: 'No database connection URI' });
   }
 
@@ -52,7 +52,7 @@ export default async function submit_feedback(
     await collection.insertOne({
       pluc_version: String(process.env.PLUC_VERSION),
       timestamp: new Date(),
-      user_id: String('test_user_id'),
+      user_id: String(session.user.id),
       playlist_id: String(playlist_id),
       thumbs_up: Boolean(thumbs_up),
       message: String(message),
