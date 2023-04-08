@@ -1,13 +1,49 @@
 'use client';
 
-import get_duplicates from '../../../lib/pluc_duplicates';
+import get_duplicates, {
+  SimplifiedArtistWithDuplicates,
+} from '../../../lib/pluc_duplicates';
 import { ArtistWithDuplicates } from '../../../lib/pluc_duplicates';
-import { PlaylistContext } from '../../Contexts/PlaylistContext';
 import ArtistDuplicates from './ArtistDuplicates';
+import { PlaylistContext } from '../../Contexts/PlaylistContext';
 import { useContext, useEffect, useState } from 'react';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { MegaphoneIcon } from '@heroicons/react/24/outline';
 import FeedbackModal from '../overlays/FeedbackModal';
+
+async function merge_artist_details(
+  artist_duplicates: SimplifiedArtistWithDuplicates[]
+) {
+  const artist_ids = artist_duplicates.map(({ artist_id }) => artist_id);
+
+  const res = await fetch(
+    `/api/artist_details?${new URLSearchParams({ q: artist_ids.join(',') })}`
+  );
+
+  if (!res.ok) {
+    alert('Error getting artist details');
+    return;
+  }
+
+  const { artists } = await res.json();
+
+  const artist_with_duplicates = artist_duplicates.map(
+    ({ tracks_with_duplicates, total_duplicates }, idx) => {
+      return {
+        artist: {
+          name: artists[idx].name,
+          image: artists[idx].images.length ? artists[idx].images[0].url : null,
+        },
+        tracks_with_duplicates,
+        total_duplicates,
+      };
+    }
+  );
+
+  return new Promise<ArtistWithDuplicates[]>((resolve) =>
+    resolve(artist_with_duplicates)
+  );
+}
 
 export default function DuplicatesModal({
   is_visible,
@@ -23,8 +59,18 @@ export default function DuplicatesModal({
   >([]);
 
   useEffect(() => {
-    get_duplicates(tracks).then((artists_with_duplicates) => {
-      setDuplicateResults(artists_with_duplicates);
+    const artist_duplicates = get_duplicates(tracks);
+
+    if (!artist_duplicates.length) {
+      setDuplicateResults([]);
+      set_visibility(tracks.length > 0);
+      return;
+    }
+
+    merge_artist_details(artist_duplicates).then((artist_with_duplicates) => {
+      if (!artist_with_duplicates) return;
+
+      setDuplicateResults(artist_with_duplicates);
       set_visibility(tracks.length > 0);
     });
   }, [tracks]);

@@ -4,7 +4,7 @@ import { jaroWinkler } from 'jaro-winkler-typescript';
 import _ from 'lodash';
 import 'lodash.combinations';
 import 'lodash.product';
-import { Artist, PlaylistTrack, Track } from 'spotify-types';
+import { PlaylistTrack, Track } from 'spotify-types';
 
 // TODO: have these be configurable by the user
 const TIME_DIFF_THRESHOLD_MS = 5000;
@@ -17,6 +17,12 @@ export interface TrackWithDuplicates {
 
 export interface ArtistWithDuplicates {
   artist: { name: string; image: string };
+  tracks_with_duplicates: TrackWithDuplicates[];
+  total_duplicates: number;
+}
+
+export interface SimplifiedArtistWithDuplicates {
+  artist_id: string;
   tracks_with_duplicates: TrackWithDuplicates[];
   total_duplicates: number;
 }
@@ -46,69 +52,64 @@ interface ArtistDict {
   [artist_id: string]: PlucArtist;
 }
 
-export default async function get_duplicates(
+export default function get_duplicates(
   playlist_tracks: PlaylistTrack[]
-): Promise<ArtistWithDuplicates[]> {
+): SimplifiedArtistWithDuplicates[] {
   const artist_dict = build_pluc_tree(playlist_tracks);
   const duplicates_by_artist = find_duplicates(artist_dict);
-  let artists_with_duplicates: ArtistWithDuplicates[] = [];
+  let artist_duplicates: SimplifiedArtistWithDuplicates[] = [];
 
   // Iterate over each artist's duplicate graph
-  const res = await Promise.all(
-    Object.entries(duplicates_by_artist).map(async ([artist_id, duplicate_graph]) => {
-      let tracks_with_duplicates: TrackWithDuplicates[] = [];
-      let total_duplicates = 0;
+  Object.entries(duplicates_by_artist).map(([artist_id, duplicate_graph]) => {
+    let tracks_with_duplicates: TrackWithDuplicates[] = [];
+    let total_duplicates = 0;
 
-      // Each graph_component is a cluster of songs that are duplicates of each other
-      forEachConnectedComponent(duplicate_graph, (graph_component) => {
-        let shortest_track_name = '';
-        let individual_duplicates: Track[] = [];
+    // Each graph_component is a cluster of songs that are duplicates of each other
+    forEachConnectedComponent(duplicate_graph, (graph_component) => {
+      let shortest_track_name = '';
+      let individual_duplicates: Track[] = [];
 
-        // Iterate through all tracks that are duplicates of each other
-        graph_component.map((track_id) => {
-          const track_details = duplicate_graph.getNodeAttributes(track_id) as Track;
+      // Iterate through all tracks that are duplicates of each other
+      graph_component.map((track_id) => {
+        const track_details = duplicate_graph.getNodeAttributes(
+          track_id
+        ) as Track;
 
-          // Picking shortest name of all tracks within this component so that the overarching track
-          // label can avoid being "Track Name - Remastered XXXX"
-          if (!shortest_track_name || track_details.name.length < shortest_track_name.length) {
-            shortest_track_name = track_details.name;
-          }
+        // Picking shortest name of all tracks within this component so that the overarching track
+        // label can avoid being "Track Name - Remastered XXXX"
+        if (
+          !shortest_track_name ||
+          track_details.name.length < shortest_track_name.length
+        ) {
+          shortest_track_name = track_details.name;
+        }
 
-          individual_duplicates.push(track_details);
-          total_duplicates++;
-        });
-
-        tracks_with_duplicates.push({
-          section_name: shortest_track_name,
-          duplicates: individual_duplicates,
-        });
+        individual_duplicates.push(track_details);
+        total_duplicates++;
       });
 
-      //  TODO: batch these requests so we only send one request for all artists
-      const res = await fetch(`/api/artist_details?q=${artist_id}`);
-
-      if (!res.ok) {
-        return null;
-      }
-
-      const artist_details = (await res.json()).artists[0] as Artist;
-
-      artists_with_duplicates.push({
-        artist: {
-          name: artist_details.name,
-          image: artist_details.images[0].url, // TODO: handle case where artist has no images
-        },
-        tracks_with_duplicates: tracks_with_duplicates,
-        total_duplicates: total_duplicates,
+      tracks_with_duplicates.push({
+        section_name: shortest_track_name,
+        duplicates: individual_duplicates,
       });
-    })
-  );
+    });
 
-  return new Promise((resolve) => resolve(artists_with_duplicates));
+    artist_duplicates.push({
+      artist_id,
+      tracks_with_duplicates: tracks_with_duplicates,
+      total_duplicates: total_duplicates,
+    });
+  });
+
+  return artist_duplicates;
 }
 
 function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
   const artist_dict: ArtistDict = {};
+
+  if (!playlist_tracks) {
+    return artist_dict;
+  }
 
   playlist_tracks.map((entry) => {
     // Filter out playlist content that aren't tracks
@@ -150,9 +151,6 @@ function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {
 
 /**
  * Find duplicates within a artist dictionary
- * This might make a ton of sense as a Python serveless function since Python
- * is so so so so so SO much better at math and statistics stuff
- *
  */
 function find_duplicates(artist_dict: ArtistDict): DuplicateResults {
   let duplicates_by_artist: DuplicateResults = {};
