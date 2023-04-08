@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 export default async function submit_feedback(
   req: NextApiRequest,
@@ -15,14 +15,24 @@ export default async function submit_feedback(
 
   const { thumbs_up, message, playlist_id } = req.body;
 
-  if (!thumbs_up || !message || !playlist_id) {
+  if (
+    thumbs_up == undefined ||
+    message == undefined ||
+    playlist_id == undefined
+  ) {
     return res.status(400).json({
       error:
         'Invalid feedback recieved, must have thumbs_up, message, and playlist_id',
     });
   }
 
-  if (process.env.MONGODB_URI === undefined) {
+  if (message.length > Number(process.env.MAX_FEEDBACK_LENGTH)) {
+    return res.status(400).json({
+      error: `Feedback message must be at most ${process.env.MAX_FEEDBACK_LENGTH} characters`,
+    });
+  }
+
+  if (!process.env.MONGODB_URI) {
     return res.status(500).json({ error: 'No database connection URI' });
   }
 
@@ -37,10 +47,27 @@ export default async function submit_feedback(
 
   try {
     const collection = client.db('feedback').collection('duplicate_detection');
-    const insert_res = await collection.insertOne({
-      thumbs_up,
-      message,
-      playlist_id,
+
+    // Check if user already submitted feedback for this playlist
+    const existing_feedback = await collection.findOne({
+      user_id: String(session.user.id),
+      playlist_id: String(playlist_id),
+    });
+
+    if (existing_feedback) {
+      await client.close();
+      return res.status(409).json({
+        error: 'User has already submitted feedback for this playlist',
+      });
+    }
+
+    await collection.insertOne({
+      pluc_version: String(process.env.PLUC_VERSION),
+      timestamp: new Date(),
+      user_id: String(session.user.id),
+      playlist_id: String(playlist_id),
+      thumbs_up: Boolean(thumbs_up),
+      message: String(message),
     });
   } catch (err) {
     await client.close();

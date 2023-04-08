@@ -12,11 +12,14 @@ export default function SearchOrLogin() {
   const { data: session } = useSession();
   const [tracks, setTracks] = useState<PlaylistTrack[]>([]);
   const [searchResults, setSearchResults] = useState<SimplifiedPlaylist[]>([]);
+  const [playlistID, setPlaylistID] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
   return session ? (
     <PlaylistContext.Provider
       value={{
+        playlistID: playlistID,
+        setPlaylistID: setPlaylistID,
         tracks: tracks,
         setTracks: setTracks,
         searchResults: searchResults,
