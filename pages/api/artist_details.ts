@@ -23,6 +23,7 @@ export default async function handler(
   }
 
   // Search for playlist name
-  const search_results = await get_artists(session.access_token, artist_list);
-  return res.status(200).json(search_results);
+  const artist_ids = artist_list.split(',');
+  const search_results = await get_artists(session.access_token, artist_ids);
+  return res.status(200).json({ artists: search_results });
 }

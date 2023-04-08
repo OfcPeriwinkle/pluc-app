@@ -1,3 +1,4 @@
+import { chunk } from 'lodash';
 import { PlaylistTrack } from 'spotify-types';
 
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
@@ -50,23 +51,35 @@ export async function get_user_details(access_token: string) {
   return res.json();
 }
 
-export async function get_artists(access_token: string, artist_list: string) {
-  // TODO: handle artist lists that are >50 long; Spotify API only allows 50 at a time
-  const res = await fetch(
-    `${SPOTIFY_API_ROOT}/artists?${new URLSearchParams({ ids: artist_list })}`,
-    {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        'Content-Type': 'application/json',
-      },
-    }
+export async function get_artists(access_token: string, artist_ids: string[]) {
+  // Send request for every 50 artists
+  const id_batches = chunk(artist_ids, 50);
+
+  const res = await Promise.all(
+    id_batches.map(async (batch) => {
+      const res = await fetch(
+        `${SPOTIFY_API_ROOT}/artists?${new URLSearchParams({
+          ids: batch.join(','),
+        })}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const { artists } = await res.json();
+      return artists;
+    })
   );
 
-  if (!res.ok) {
-    return null;
-  }
-
-  return res.json();
+  // Flatten array of arrays
+  return [].concat.apply([], res);
 }
 
 export async function search_for_playlist(
