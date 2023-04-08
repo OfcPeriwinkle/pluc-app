@@ -1,6 +1,7 @@
 'use client';
 
-import { FormEvent, RefObject, useState } from 'react';
+import { FormEvent, RefObject, useContext, useState } from 'react';
+import { PlaylistContext } from '../../Contexts/PlaylistContext';
 import {
   HandThumbDownIcon,
   HandThumbUpIcon,
@@ -27,7 +28,7 @@ enum Thumbs {
 async function submit_feedback(
   thumbs_up: Thumbs,
   message: string,
-  playlist_id: string = 'test_playlist_id'
+  playlist_id: string
 ): Promise<boolean> {
   const res = await fetch('/api/submit_feedback', {
     method: 'POST',
@@ -65,6 +66,7 @@ export default function FeedbackForm({
 }) {
   const [thumbs, setThumbs] = useState(Thumbs.NONE);
   const [charCount, setCharCount] = useState(0);
+  const { playlistID } = useContext(PlaylistContext);
 
   async function on_submit(e: FormEvent) {
     e.preventDefault();
@@ -79,7 +81,11 @@ export default function FeedbackForm({
       return;
     }
 
-    const res = await submit_feedback(thumbs, e.target.message.value);
+    const res = await submit_feedback(
+      thumbs,
+      e.target.message.value,
+      playlistID
+    );
 
     if (res) {
       setThumbs(Thumbs.NONE);

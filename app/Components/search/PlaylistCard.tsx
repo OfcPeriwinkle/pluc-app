@@ -16,7 +16,7 @@ export default function PlaylistCard({
   playlist_name,
   user_display_name,
 }: PlaylistCardProps) {
-  const { tracks, setTracks } = useContext(PlaylistContext);
+  const { setPlaylistID, setTracks } = useContext(PlaylistContext);
 
   async function handle_click() {
     const res = await fetch(`/api/playlist_tracks?id=${playlist_id}`);
@@ -27,6 +27,7 @@ export default function PlaylistCard({
 
     const playlist_tracks = (await res.json()) as PlaylistTrack[];
     setTracks(playlist_tracks);
+    setPlaylistID(playlist_id);
   }
 
   return (
