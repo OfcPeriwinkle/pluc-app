@@ -7,7 +7,7 @@ import { getSession } from 'next-auth/react';
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '4mb',
+      sizeLimit: '15mb',
     },
   },
 };
@@ -29,10 +29,14 @@ export default async function playlist_duplicates(
   }
 
   try {
-    const artist_duplicates = await get_duplicates(playlist_tracks);
-    const artist_ids = artist_duplicates.map((artist) => artist.artist_id);
+    const artist_duplicates = get_duplicates(playlist_tracks);
+
+    if (!artist_duplicates.length) {
+      return res.status(200).json({ artists_with_duplicates: [] });
+    }
 
     // Fetch artist details
+    const artist_ids = artist_duplicates.map((artist) => artist.artist_id);
     const artist_details = await get_artists(session.access_token, artist_ids);
 
     if (!artist_details) {
