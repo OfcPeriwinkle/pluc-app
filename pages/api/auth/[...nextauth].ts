@@ -6,8 +6,6 @@ import SpotifyProvider from 'next-auth/providers/spotify';
 const authOptions: AuthOptions = {
   providers: [
     SpotifyProvider({
-      // TODO: throw error if env variables are undefined
-      // TODO: does next-auth use PKCE by default?
       clientId: process.env.SPOTIFY_ID ?? 'no_id',
       clientSecret: process.env.SPOTIFY_SECRET ?? 'no_secret',
       authorization:

@@ -48,7 +48,19 @@ export default async function submit_feedback(
   try {
     const collection = client.db('feedback').collection('duplicate_detection');
 
-    // TODO: add user_id to feedback and check if user has already submitted feedback for this playlist
+    // Check if user already submitted feedback for this playlist
+    const existing_feedback = await collection.findOne({
+      user_id: String(session.user.id),
+      playlist_id: String(playlist_id),
+    });
+
+    if (existing_feedback) {
+      await client.close();
+      return res.status(409).json({
+        error: 'User has already submitted feedback for this playlist',
+      });
+    }
+
     await collection.insertOne({
       pluc_version: String(process.env.PLUC_VERSION),
       timestamp: new Date(),

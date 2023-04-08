@@ -42,8 +42,13 @@ async function submit_feedback(
     }),
   });
 
+  if (res.status === 409) {
+    alert('You have already submitted feedback for this playlist.');
+    return new Promise((resolve) => resolve(false));
+  }
+
   if (!res.ok) {
-    alert('Error submitting feedback');
+    alert('Error submitting feedback.');
     return new Promise((resolve) => resolve(false));
   }
 
