@@ -23,10 +23,38 @@ export default function DuplicatesModal({
   >([]);
 
   useEffect(() => {
-    get_duplicates(tracks).then((artists_with_duplicates) => {
-      setDuplicateResults(artists_with_duplicates);
-      set_visibility(tracks.length > 0);
-    });
+    if (!tracks.length) {
+      return;
+    }
+
+    // TODO: Make sure we aren't hitting a size limit
+
+    fetch('/api/playlist_duplicates', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ playlist_tracks: tracks }),
+    })
+      .then((res) => {
+        if (res.status === 413) {
+          alert('Playlist is too large; this will be fixed soon!');
+          return;
+        }
+
+        if (!res.ok) {
+          alert(`Something went wrong! Status: ${res.status}`);
+          return;
+        }
+
+        res.json().then(({ artists_with_duplicates }) => {
+          setDuplicateResults(artists_with_duplicates);
+          set_visibility(tracks.length > 0);
+        });
+      })
+      .catch((err) => {
+        alert(err);
+      });
   }, [tracks]);
 
   function handle_click() {

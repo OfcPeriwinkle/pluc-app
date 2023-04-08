@@ -21,6 +21,12 @@ export interface ArtistWithDuplicates {
   total_duplicates: number;
 }
 
+export interface ArtistDuplicates {
+  artist_id: string;
+  tracks_with_duplicates: TrackWithDuplicates[];
+  total_duplicates: number;
+}
+
 /**
  * Dictionary of duplicate track results by artist.
  *
@@ -48,63 +54,58 @@ interface ArtistDict {
 
 export default async function get_duplicates(
   playlist_tracks: PlaylistTrack[]
-): Promise<ArtistWithDuplicates[]> {
+): Promise<ArtistDuplicates[]> {
   const artist_dict = build_pluc_tree(playlist_tracks);
   const duplicates_by_artist = find_duplicates(artist_dict);
-  let artists_with_duplicates: ArtistWithDuplicates[] = [];
+  let artist_duplicates: ArtistDuplicates[] = [];
 
   // Iterate over each artist's duplicate graph
   const res = await Promise.all(
-    Object.entries(duplicates_by_artist).map(async ([artist_id, duplicate_graph]) => {
-      let tracks_with_duplicates: TrackWithDuplicates[] = [];
-      let total_duplicates = 0;
+    Object.entries(duplicates_by_artist).map(
+      async ([artist_id, duplicate_graph]) => {
+        let tracks_with_duplicates: TrackWithDuplicates[] = [];
+        let total_duplicates = 0;
 
-      // Each graph_component is a cluster of songs that are duplicates of each other
-      forEachConnectedComponent(duplicate_graph, (graph_component) => {
-        let shortest_track_name = '';
-        let individual_duplicates: Track[] = [];
+        // Each graph_component is a cluster of songs that are duplicates of each other
+        forEachConnectedComponent(duplicate_graph, (graph_component) => {
+          let shortest_track_name = '';
+          let individual_duplicates: Track[] = [];
 
-        // Iterate through all tracks that are duplicates of each other
-        graph_component.map((track_id) => {
-          const track_details = duplicate_graph.getNodeAttributes(track_id) as Track;
+          // Iterate through all tracks that are duplicates of each other
+          graph_component.map((track_id) => {
+            const track_details = duplicate_graph.getNodeAttributes(
+              track_id
+            ) as Track;
 
-          // Picking shortest name of all tracks within this component so that the overarching track
-          // label can avoid being "Track Name - Remastered XXXX"
-          if (!shortest_track_name || track_details.name.length < shortest_track_name.length) {
-            shortest_track_name = track_details.name;
-          }
+            // Picking shortest name of all tracks within this component so that the overarching track
+            // label can avoid being "Track Name - Remastered XXXX"
+            if (
+              !shortest_track_name ||
+              track_details.name.length < shortest_track_name.length
+            ) {
+              shortest_track_name = track_details.name;
+            }
 
-          individual_duplicates.push(track_details);
-          total_duplicates++;
+            individual_duplicates.push(track_details);
+            total_duplicates++;
+          });
+
+          tracks_with_duplicates.push({
+            section_name: shortest_track_name,
+            duplicates: individual_duplicates,
+          });
         });
 
-        tracks_with_duplicates.push({
-          section_name: shortest_track_name,
-          duplicates: individual_duplicates,
+        artist_duplicates.push({
+          artist_id,
+          tracks_with_duplicates: tracks_with_duplicates,
+          total_duplicates: total_duplicates,
         });
-      });
-
-      //  TODO: batch these requests so we only send one request for all artists
-      const res = await fetch(`/api/artist_details?q=${artist_id}`);
-
-      if (!res.ok) {
-        return null;
       }
-
-      const artist_details = (await res.json()).artists[0] as Artist;
-
-      artists_with_duplicates.push({
-        artist: {
-          name: artist_details.name,
-          image: artist_details.images[0].url, // TODO: handle case where artist has no images
-        },
-        tracks_with_duplicates: tracks_with_duplicates,
-        total_duplicates: total_duplicates,
-      });
-    })
+    )
   );
 
-  return new Promise((resolve) => resolve(artists_with_duplicates));
+  return new Promise((resolve) => resolve(artist_duplicates));
 }
 
 function build_pluc_tree(playlist_tracks: PlaylistTrack[]): ArtistDict {

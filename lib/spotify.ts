@@ -1,11 +1,13 @@
-import { PlaylistTrack } from 'spotify-types';
+import { Artist, PlaylistTrack } from 'spotify-types';
 
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
 const SPOTIFY_API_ROOT = 'https://api.spotify.com/v1';
 
 const client_id = process.env.SPOTIFY_ID;
 const client_secret = process.env.SPOTIFY_SECRET;
-const basic_authorization = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
+const basic_authorization = Buffer.from(
+  `${client_id}:${client_secret}`
+).toString('base64');
 
 /** Use a refresh_token to acquire a new access_token */
 export async function get_access_token(active_refresh_token: string) {
@@ -48,9 +50,25 @@ export async function get_user_details(access_token: string) {
   return res.json();
 }
 
-export async function get_artists(access_token: string, artist_list: string) {
+/** Get details for a list of artists
+ *
+ * @param access_token Spotify access token
+ * @param artist_list List of artist ids
+ */
+export async function get_artists(
+  access_token: string,
+  artist_list: string[]
+): Promise<Artist[] | null> {
+  if (!artist_list.length) {
+    return null;
+  }
+
+  // TODO: make sure we are not sending too many ids at once; limit to 50 and send multiple requests
+  // (https://developer.spotify.com/documentation/web-api/reference/get-multiple-artists)
   const res = await fetch(
-    `${SPOTIFY_API_ROOT}/artists?${new URLSearchParams({ ids: artist_list })}`,
+    `${SPOTIFY_API_ROOT}/artists?${new URLSearchParams({
+      ids: artist_list.join(','),
+    })}`,
     {
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -63,10 +81,17 @@ export async function get_artists(access_token: string, artist_list: string) {
     return null;
   }
 
-  return res.json();
+  const { artists } = await res.json();
+
+  return new Promise<Artist[]>((resolve) => {
+    resolve(artists);
+  });
 }
 
-export async function search_for_playlist(access_token: string, playlist_name: string) {
+export async function search_for_playlist(
+  access_token: string,
+  playlist_name: string
+) {
   const res = await fetch(
     `${SPOTIFY_API_ROOT}/search?${new URLSearchParams({
       type: 'playlist',
@@ -88,11 +113,16 @@ export async function search_for_playlist(access_token: string, playlist_name: s
   return res.json();
 }
 
-export async function get_playlist_tracks(access_token: string, playlist_id: string) {
+export async function get_playlist_tracks(
+  access_token: string,
+  playlist_id: string
+) {
   let next: string | null = '';
-  let url = `${SPOTIFY_API_ROOT}/playlists/${playlist_id}/tracks?${new URLSearchParams({
-    limit: '50',
-  })}`;
+  let url = `${SPOTIFY_API_ROOT}/playlists/${playlist_id}/tracks?${new URLSearchParams(
+    {
+      limit: '50',
+    }
+  )}`;
 
   let all_tracks: PlaylistTrack[] = [];
 
