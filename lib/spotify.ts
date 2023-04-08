@@ -5,7 +5,9 @@ const SPOTIFY_API_ROOT = 'https://api.spotify.com/v1';
 
 const client_id = process.env.SPOTIFY_ID;
 const client_secret = process.env.SPOTIFY_SECRET;
-const basic_authorization = Buffer.from(`${client_id}:${client_secret}`).toString('base64');
+const basic_authorization = Buffer.from(
+  `${client_id}:${client_secret}`
+).toString('base64');
 
 /** Use a refresh_token to acquire a new access_token */
 export async function get_access_token(active_refresh_token: string) {
@@ -49,6 +51,7 @@ export async function get_user_details(access_token: string) {
 }
 
 export async function get_artists(access_token: string, artist_list: string) {
+  // TODO: handle artist lists that are >50 long; Spotify API only allows 50 at a time
   const res = await fetch(
     `${SPOTIFY_API_ROOT}/artists?${new URLSearchParams({ ids: artist_list })}`,
     {
@@ -66,7 +69,10 @@ export async function get_artists(access_token: string, artist_list: string) {
   return res.json();
 }
 
-export async function search_for_playlist(access_token: string, playlist_name: string) {
+export async function search_for_playlist(
+  access_token: string,
+  playlist_name: string
+) {
   const res = await fetch(
     `${SPOTIFY_API_ROOT}/search?${new URLSearchParams({
       type: 'playlist',
@@ -88,11 +94,16 @@ export async function search_for_playlist(access_token: string, playlist_name: s
   return res.json();
 }
 
-export async function get_playlist_tracks(access_token: string, playlist_id: string) {
+export async function get_playlist_tracks(
+  access_token: string,
+  playlist_id: string
+) {
   let next: string | null = '';
-  let url = `${SPOTIFY_API_ROOT}/playlists/${playlist_id}/tracks?${new URLSearchParams({
-    limit: '50',
-  })}`;
+  let url = `${SPOTIFY_API_ROOT}/playlists/${playlist_id}/tracks?${new URLSearchParams(
+    {
+      limit: '50',
+    }
+  )}`;
 
   let all_tracks: PlaylistTrack[] = [];
 
