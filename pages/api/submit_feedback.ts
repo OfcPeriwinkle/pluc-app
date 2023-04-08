@@ -26,9 +26,9 @@ export default async function submit_feedback(
     });
   }
 
-  if (message.length > 200) {
+  if (message.length > Number(process.env.MAX_FEEDBACK_LENGTH)) {
     return res.status(400).json({
-      error: 'Feedback message must be less than 200 characters',
+      error: `Feedback message must be less than ${process.env.MAX_FEEDBACK_LENGTH} characters`,
     });
   }
 
