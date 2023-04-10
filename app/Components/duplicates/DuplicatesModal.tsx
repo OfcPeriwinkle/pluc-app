@@ -10,6 +10,8 @@ import { useContext, useEffect, useState } from 'react';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { MegaphoneIcon } from '@heroicons/react/24/outline';
 import FeedbackModal from '../overlays/FeedbackModal';
+import { TrackRemovalContext } from '../../Contexts/TrackRemovalContext';
+import RemoveModal from '../overlays/RemoveModal';
 
 async function merge_artist_details(
   artist_duplicates: SimplifiedArtistWithDuplicates[]
@@ -52,12 +54,16 @@ export default function DuplicatesModal({
   is_visible: Boolean;
   set_visibility: Function;
 }) {
-  const { tracks, setTracks } = useContext(PlaylistContext);
+  const { tracks } = useContext(PlaylistContext);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [duplicateResults, setDuplicateResults] = useState<
     ArtistWithDuplicates[]
   >([]);
+  const [removeModalOpen, setRemoveModalOpen] = useState(false);
+  const [trackToRemove, setTrackToRemove] = useState(null);
 
+  // Update the duplicate results when the tracks change, this update logic might make sense in
+  // a less "side-effecty" way in the future
   useEffect(() => {
     const artist_duplicates = get_duplicates(tracks);
 
@@ -75,6 +81,7 @@ export default function DuplicatesModal({
     });
   }, [tracks]);
 
+  // Handle the back button
   function handle_click() {
     set_visibility(false);
   }
@@ -84,7 +91,14 @@ export default function DuplicatesModal({
   }
 
   return (
-    <>
+    <TrackRemovalContext.Provider
+      value={{
+        modalOpen: removeModalOpen,
+        setModalOpen: setRemoveModalOpen,
+        track: trackToRemove,
+        setTrack: setTrackToRemove,
+      }}
+    >
       <FeedbackModal open={feedbackOpen} setOpen={setFeedbackOpen} />
       <section className="mt-10 w-full">
         <nav className="grid grid-cols-3 items-center">
@@ -128,6 +142,7 @@ export default function DuplicatesModal({
           </h2>
         )}
       </section>
-    </>
+      <RemoveModal />
+    </TrackRemovalContext.Provider>
   );
 }
