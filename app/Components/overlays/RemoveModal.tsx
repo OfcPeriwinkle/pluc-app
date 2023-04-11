@@ -5,10 +5,26 @@ import { useContext } from 'react';
 import { TrackRemovalContext } from '../../Contexts/TrackRemovalContext';
 
 export default function RemoveModal() {
-  const { modalOpen, setModalOpen, track } = useContext(TrackRemovalContext);
+  const { modalOpen, setModalOpen, track, setTrack } =
+    useContext(TrackRemovalContext);
 
-  function handle_remove(e: React.MouseEvent<HTMLButtonElement>) {
-    alert(`Removing ${track?.name}...`);
+  async function handle_remove(e: React.MouseEvent<HTMLButtonElement>) {
+    try {
+      const res = await fetch('/api/remove_track', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          track_id: track?.id,
+          playlist_id: 'playlist_id',
+        }),
+      });
+    } catch {
+      alert('Error removing track.');
+    }
+
+    setTrack(null);
     setModalOpen(false);
   }
 

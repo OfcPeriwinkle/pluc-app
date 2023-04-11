@@ -10,8 +10,8 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
   const image = track.album.images[0];
 
   function handle_click() {
-    setModalOpen(true);
     setTrack(track);
+    setModalOpen(true);
   }
 
   return (
