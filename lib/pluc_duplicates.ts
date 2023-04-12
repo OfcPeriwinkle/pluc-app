@@ -10,6 +10,7 @@ import { PlaylistTrack, Track } from 'spotify-types';
 const TIME_DIFF_THRESHOLD_MS = 5000;
 const JARO_WINKLER_SIMILARITY_THRESHOLD = 0.7;
 
+// TODO: Store PlaylistTrack[] instead of Track[] so we can get added_at easily
 export interface TrackWithDuplicates {
   section_name: string;
   duplicates: Track[];

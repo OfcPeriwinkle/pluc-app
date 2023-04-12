@@ -149,3 +149,35 @@ export async function get_playlist_tracks(
     resolve(all_tracks);
   });
 }
+
+export async function remove_tracks(
+  access_token: string,
+  playlist_id: string,
+  track_ids: string[]
+) {
+  if (track_ids.length >= 100) {
+    throw new Error('Cannot remove more than 100 tracks at a time');
+  }
+
+  const res = await fetch(
+    `${SPOTIFY_API_ROOT}/playlists/${playlist_id}/tracks`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tracks: track_ids.map((id) => ({ uri: `spotify:track:${id}` })),
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+
+  const { snapshot_id } = await res.json();
+
+  return snapshot_id;
+}
