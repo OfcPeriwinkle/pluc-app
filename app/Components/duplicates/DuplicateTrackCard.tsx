@@ -5,6 +5,7 @@ import { Track } from 'spotify-types';
 import { useContext } from 'react';
 import { TrackRemovalContext } from '../../Contexts/TrackRemovalContext';
 
+// TODO: We need to hide this if the track has been removed
 export default function DuplicateTrackCard({ track }: { track: Track }) {
   const { setModalOpen, setTrack } = useContext(TrackRemovalContext);
   const image = track.album.images[0];
@@ -34,6 +35,7 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
           <p className="mt-2 w-full truncate text-gray-light sm:text-lg">
             {track.album.name}
           </p>
+          {/* TODO: Add the date the track was added on */}
         </section>
       </button>
     </>

@@ -15,6 +15,7 @@ export default function PlaylistSearchResults({
       playlist_image_url: playlist.images[0].url,
       playlist_name: playlist.name,
       display_name: playlist.owner.display_name ?? 'No Name',
+      owner_id: playlist.owner.id,
     };
   });
 
@@ -27,7 +28,8 @@ export default function PlaylistSearchResults({
             playlist_id={playlist_details.playlist_id}
             playlist_image_url={playlist_details.playlist_image_url}
             playlist_name={playlist_details.playlist_name}
-            user_display_name={playlist_details.display_name}
+            owner_display_name={playlist_details.display_name}
+            owner_id={playlist_details.owner_id}
           />
         );
       })}

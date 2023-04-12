@@ -13,17 +13,21 @@ export default function SearchOrLogin() {
   const [tracks, setTracks] = useState<PlaylistTrack[]>([]);
   const [searchResults, setSearchResults] = useState<SimplifiedPlaylist[]>([]);
   const [playlistID, setPlaylistID] = useState('');
+  const [ownerID, setOwnerID] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
   return session ? (
     <PlaylistContext.Provider
       value={{
-        playlistID: playlistID,
-        setPlaylistID: setPlaylistID,
-        tracks: tracks,
-        setTracks: setTracks,
-        searchResults: searchResults,
-        setSearchResults: setSearchResults,
+        playlistID,
+        setPlaylistID,
+        ownerID,
+        setOwnerID,
+        userID: session ? session.user.id : '',
+        tracks,
+        setTracks,
+        searchResults,
+        setSearchResults,
       }}
     >
       <DuplicatesModal

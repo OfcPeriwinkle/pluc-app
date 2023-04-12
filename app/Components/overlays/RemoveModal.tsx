@@ -3,12 +3,19 @@
 import { Dialog } from '@headlessui/react';
 import { useContext } from 'react';
 import { TrackRemovalContext } from '../../Contexts/TrackRemovalContext';
+import { PlaylistContext } from '../../Contexts/PlaylistContext';
 
 export default function RemoveModal() {
+  const { playlistID, ownerID, userID } = useContext(PlaylistContext);
   const { modalOpen, setModalOpen, track, setTrack } =
     useContext(TrackRemovalContext);
 
   async function handle_remove(e: React.MouseEvent<HTMLButtonElement>) {
+    if (ownerID !== userID) {
+      alert('You must be the owner of the playlist to remove tracks.');
+      return;
+    }
+
     try {
       const res = await fetch('/api/remove_track', {
         method: 'DELETE',
@@ -17,12 +24,14 @@ export default function RemoveModal() {
         },
         body: JSON.stringify({
           track_id: track?.id,
-          playlist_id: 'playlist_id',
+          playlist_id: playlistID,
         }),
       });
     } catch {
       alert('Error removing track.');
     }
+
+    // TODO: remove track from duplicates list
 
     setTrack(null);
     setModalOpen(false);
@@ -46,7 +55,12 @@ export default function RemoveModal() {
 
           <div className="mt-4 flex flex-col justify-around gap-4 sm:flex-row">
             <button
-              className="h-11 rounded-full bg-red-600 font-semibold duration-200 ease-in-out hover:scale-105 sm:h-12 sm:w-40"
+              disabled={ownerID !== userID}
+              className={`h-11 rounded-full ${
+                ownerID === userID
+                  ? 'bg-red-600 hover:scale-105'
+                  : 'bg-gray-light bg-opacity-25'
+              } font-semibold duration-200 ease-in-out sm:h-12 sm:w-40`}
               onClick={(e) => handle_remove(e)}
             >
               Remove
