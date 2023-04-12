@@ -4,10 +4,19 @@ import Image from 'next/image';
 import { Track } from 'spotify-types';
 import { useContext } from 'react';
 import { TrackRemovalContext } from '../../Contexts/TrackRemovalContext';
+import { PlaylistContext } from '../../Contexts/PlaylistContext';
 
 export default function DuplicateTrackCard({ track }: { track: Track }) {
   const { setModalOpen, setTrack } = useContext(TrackRemovalContext);
+  const { tracks } = useContext(PlaylistContext);
   const image = track.album.images[0];
+
+  // TODO: Send playlist tracks so we don't have to filter; also, this might break
+  // if the track is a traditional duplicate (same track ids)
+  const playlist_track = tracks.filter((t) => t.track?.id === track.id)[0];
+  const date = playlist_track.added_at
+    ? new Date(playlist_track.added_at)
+    : null;
 
   function handle_click() {
     setTrack(track);
@@ -34,7 +43,9 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
           <p className="mt-2 w-full truncate text-gray-light sm:text-lg">
             {track.album.name}
           </p>
-          {/* TODO: Add the date the track was added on */}
+          <p className="mt-2 w-full truncate text-gray-light sm:text-lg">
+            {date?.toLocaleDateString()}
+          </p>
         </section>
       </button>
     </>
