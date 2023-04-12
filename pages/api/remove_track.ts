@@ -9,8 +9,7 @@ export default async function remove_track(
   const session = await getSession({ req });
 
   if (!session || !session.access_token) {
-    res.status(401).json({ error: 'Invalid session' });
-    return;
+    return res.status(401).json({ error: 'Invalid session' });
   }
 
   const { track_id, playlist_id } = req.body;
