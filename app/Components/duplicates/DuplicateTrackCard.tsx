@@ -5,7 +5,6 @@ import { Track } from 'spotify-types';
 import { useContext } from 'react';
 import { TrackRemovalContext } from '../../Contexts/TrackRemovalContext';
 
-// TODO: We need to hide this if the track has been removed
 export default function DuplicateTrackCard({ track }: { track: Track }) {
   const { setModalOpen, setTrack } = useContext(TrackRemovalContext);
   const image = track.album.images[0];

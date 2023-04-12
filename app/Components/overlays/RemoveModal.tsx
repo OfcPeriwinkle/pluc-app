@@ -6,7 +6,8 @@ import { TrackRemovalContext } from '../../Contexts/TrackRemovalContext';
 import { PlaylistContext } from '../../Contexts/PlaylistContext';
 
 export default function RemoveModal() {
-  const { playlistID, ownerID, userID } = useContext(PlaylistContext);
+  const { playlistID, ownerID, userID, tracks, setTracks } =
+    useContext(PlaylistContext);
   const { modalOpen, setModalOpen, track, setTrack } =
     useContext(TrackRemovalContext);
 
@@ -29,10 +30,12 @@ export default function RemoveModal() {
       });
     } catch {
       alert('Error removing track.');
+      return;
     }
 
-    // TODO: remove track from duplicates list
-
+    // Remove track from local state
+    const new_tracks = tracks.filter((t) => t.track?.id !== track?.id);
+    setTracks(new_tracks);
     setTrack(null);
     setModalOpen(false);
   }
