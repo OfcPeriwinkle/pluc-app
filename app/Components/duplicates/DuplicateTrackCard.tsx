@@ -13,10 +13,13 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
 
   // TODO: Send playlist tracks so we don't have to filter; also, this might break
   // if the track is a traditional duplicate (same track ids)
-  const playlist_track = tracks.filter((t) => t.track?.id === track.id)[0];
-  const date = playlist_track.added_at
-    ? new Date(playlist_track.added_at)
-    : null;
+  const matching_tracks = tracks.filter((t) => t.track?.id === track.id);
+  let date = null;
+
+  if (matching_tracks.length >= 1) {
+    const playlist_track = matching_tracks[0];
+    date = playlist_track.added_at ? new Date(playlist_track.added_at) : null;
+  }
 
   function handle_click() {
     setTrack(track);
