@@ -18,6 +18,26 @@ enum Thumbs {
   NONE,
 }
 
+// TODO: See if we can extend these methods from Event
+interface FeedbackFormEvent extends FormEvent {
+  target: {
+    message: {
+      value: string;
+    };
+    addEventListener(
+      type: string,
+      callback: EventListenerOrEventListenerObject | null,
+      options?: AddEventListenerOptions | boolean
+    ): void;
+    dispatchEvent(event: Event): boolean;
+    removeEventListener(
+      type: string,
+      callback: EventListenerOrEventListenerObject | null,
+      options?: EventListenerOptions | boolean
+    ): void;
+  };
+}
+
 /*
  * Handles the submission of feedback to the server.
  * @param thumbs_up - Thumbs up or thumbs down
@@ -73,7 +93,7 @@ export default function FeedbackForm({
   const [charCount, setCharCount] = useState(0);
   const { playlistID } = useContext(PlaylistContext);
 
-  async function on_submit(e: FormEvent) {
+  async function on_submit(e: FeedbackFormEvent) {
     e.preventDefault();
 
     if (thumbs == Thumbs.NONE) {
@@ -99,7 +119,12 @@ export default function FeedbackForm({
   }
 
   return (
-    <form className="mt-4" method="post" onSubmit={(e) => on_submit(e)}>
+    <form
+      className="mt-4"
+      method="post"
+      // TODO: This is a hack to appease type checks
+      onSubmit={(e: FormEvent) => on_submit(e as FeedbackFormEvent)}
+    >
       <div className="flex w-full items-center justify-center gap-4">
         <button
           className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-white transition duration-200 ease-in-out hover:scale-105 ${

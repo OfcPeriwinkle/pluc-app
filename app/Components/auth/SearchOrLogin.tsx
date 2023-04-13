@@ -23,7 +23,7 @@ export default function SearchOrLogin() {
         setPlaylistID,
         ownerID,
         setOwnerID,
-        userID: session ? session.user.id : '',
+        userID: session.user?.name ?? '',
         tracks,
         setTracks,
         searchResults,

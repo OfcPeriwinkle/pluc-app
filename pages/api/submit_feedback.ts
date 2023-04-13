@@ -50,7 +50,7 @@ export default async function submit_feedback(
 
     // Check if user already submitted feedback for this playlist
     const existing_feedback = await collection.findOne({
-      user_id: String(session.user.id),
+      user_id: String(session.user?.name),
       playlist_id: String(playlist_id),
     });
 
@@ -64,7 +64,7 @@ export default async function submit_feedback(
     await collection.insertOne({
       pluc_version: String(process.env.PLUC_VERSION),
       timestamp: new Date(),
-      user_id: String(session.user.id),
+      user_id: String(session.user?.name),
       playlist_id: String(playlist_id),
       thumbs_up: Boolean(thumbs_up),
       message: String(message),

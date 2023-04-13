@@ -48,7 +48,13 @@ const authOptions: AuthOptions = {
     },
     async session({ session, token }) {
       session.access_token = token.access_token;
-      session.user.id = token.user_id;
+
+      if (!session.user) {
+        session.user = { name: '', image: null };
+      }
+
+      // Add the user's ID to the session
+      session.user.name = token.user_id;
       return session;
     },
   },
