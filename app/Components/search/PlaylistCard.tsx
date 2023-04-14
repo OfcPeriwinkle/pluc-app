@@ -42,6 +42,7 @@ export default function PlaylistCard({
         onClick={handle_click}
       >
         <Image
+          unoptimized
           src={playlist_image_url}
           width={160}
           height={160}
