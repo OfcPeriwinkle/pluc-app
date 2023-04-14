@@ -33,6 +33,7 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
         onClick={handle_click}
       >
         <Image
+          unoptimized
           src={image.url}
           alt={`${track.album.name} Artwork`}
           width={160}

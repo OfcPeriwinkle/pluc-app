@@ -17,6 +17,7 @@ export default function ArtistDuplicates({
     <section className="mb-24 mt-4 sm:mb-14 sm:rounded-md sm:bg-gray sm:bg-opacity-25 sm:p-6">
       <div className="flex w-full flex-col items-center justify-center gap-4 rounded-md bg-gray bg-opacity-25 p-4 sm:flex-row sm:justify-start sm:bg-opacity-0 sm:p-0">
         <Image
+          unoptimized
           src={artist_image}
           alt="Artist image"
           width={160}
