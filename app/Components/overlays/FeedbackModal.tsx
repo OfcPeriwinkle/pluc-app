@@ -11,12 +11,12 @@ export default function FeedbackModal({
   open: boolean;
   setOpen: Function;
 }) {
-  const textarea_ref = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
     <Dialog
       className="relative z-50"
-      initialFocus={textarea_ref}
+      initialFocus={textareaRef}
       open={open}
       onClose={() => setOpen(false)}
     >
@@ -31,7 +31,7 @@ export default function FeedbackModal({
             feedback about your results, fire away!
           </Dialog.Description>
 
-          <FeedbackForm textarea_ref={textarea_ref} setOpen={setOpen} />
+          <FeedbackForm textareaRef={textareaRef} setOpen={setOpen} />
         </Dialog.Panel>
       </div>
     </Dialog>

@@ -11,7 +11,7 @@ export default function RemoveModal() {
   const { modalOpen, setModalOpen, track, setTrack } =
     useContext(TrackRemovalContext);
 
-  async function handle_remove(e: React.MouseEvent<HTMLButtonElement>) {
+  async function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
     if (ownerID !== userID) {
       alert('You must be the owner of the playlist to remove tracks.');
       return;
@@ -24,8 +24,8 @@ export default function RemoveModal() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          track_id: track?.id,
-          playlist_id: playlistID,
+          trackID: track?.id,
+          playlistID: playlistID,
         }),
       });
     } catch {
@@ -34,8 +34,8 @@ export default function RemoveModal() {
     }
 
     // Remove track from local state
-    const new_tracks = tracks.filter((t) => t.track?.id !== track?.id);
-    setTracks(new_tracks);
+    const newTracks = tracks.filter((t) => t.track?.id !== track?.id);
+    setTracks(newTracks);
     setTrack(null);
     setModalOpen(false);
   }
@@ -64,7 +64,7 @@ export default function RemoveModal() {
                   ? 'bg-red-600 hover:scale-105'
                   : 'bg-gray-light bg-opacity-25'
               } font-semibold duration-200 ease-in-out sm:h-12 sm:w-40`}
-              onClick={(e) => handle_remove(e)}
+              onClick={(e) => handleRemove(e)}
             >
               Remove
             </button>
