@@ -1,5 +1,4 @@
 import PlaylistCard from './PlaylistCard';
-import { Suspense } from 'react';
 import type { SimplifiedPlaylist } from 'spotify-types/typings/playlist';
 
 export interface PlaylistSearchResultsProps {
@@ -11,11 +10,11 @@ export default function PlaylistSearchResults({
 }: PlaylistSearchResultsProps) {
   const processed_playlists = playlists.map((playlist) => {
     return {
-      playlist_id: playlist.id,
-      playlist_image_url: playlist.images[0].url,
-      playlist_name: playlist.name,
-      display_name: playlist.owner.display_name ?? 'No Name',
-      owner_id: playlist.owner.id,
+      playlistID: playlist.id,
+      playlistImageURL: playlist.images[0].url,
+      playlistName: playlist.name,
+      displayName: playlist.owner.displayName ?? 'No Name',
+      ownerID: playlist.owner.id,
     };
   });
 
@@ -25,11 +24,11 @@ export default function PlaylistSearchResults({
         return (
           <PlaylistCard
             key={index}
-            playlist_id={playlist_details.playlist_id}
-            playlist_image_url={playlist_details.playlist_image_url}
-            playlist_name={playlist_details.playlist_name}
-            owner_display_name={playlist_details.display_name}
-            owner_id={playlist_details.owner_id}
+            playlistID={playlist_details.playlistID}
+            playlistImageURL={playlist_details.playlistImageURL}
+            playlistName={playlist_details.playlistName}
+            ownerDisplayName={playlist_details.displayName}
+            ownerID={playlist_details.ownerID}
           />
         );
       })}
