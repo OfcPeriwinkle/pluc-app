@@ -13,15 +13,15 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
 
   // TODO: Send playlist tracks so we don't have to filter; also, this might break
   // if the track is a traditional duplicate (same track ids)
-  const matching_tracks = tracks.filter((t) => t.track?.id === track.id);
+  const matchingTracks = tracks.filter((t) => t.track?.id === track.id);
   let date = null;
 
-  if (matching_tracks.length >= 1) {
-    const playlist_track = matching_tracks[0];
-    date = playlist_track.added_at ? new Date(playlist_track.added_at) : null;
+  if (matchingTracks.length >= 1) {
+    const playlistTrack = matchingTracks[0];
+    date = playlistTrack.addedAt ? new Date(playlistTrack.addedAt) : null;
   }
 
-  function handle_click() {
+  function handleClick() {
     setTrack(track);
     setModalOpen(true);
   }
@@ -30,7 +30,7 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
     <>
       <button
         className="flex w-full flex-col items-center justify-center rounded-md bg-gray bg-opacity-25 p-4 duration-200 ease-in-out hover:bg-opacity-100 focus:scale-95 sm:w-64 sm:bg-gray-light sm:bg-opacity-10 sm:p-4 sm:hover:bg-opacity-25"
-        onClick={handle_click}
+        onClick={handleClick}
       >
         <Image
           unoptimized
