@@ -1,14 +1,19 @@
-import { get_user_details } from '../../lib/spotify';
+import { getUserDetails } from '../../lib/spotify';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const session = await getSession({ req });
 
   if (!session?.access_token) {
-    return res.status(401).json({ error: 'Session does not have valid access_token' });
+    return res
+      .status(401)
+      .json({ error: 'Session does not have valid access_token' });
   }
 
-  const user_details = await get_user_details(session.access_token);
-  return res.status(200).json({ user: user_details });
+  const userDetails = await getUserDetails(session.access_token);
+  return res.status(200).json({ user: userDetails });
 }

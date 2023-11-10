@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { remove_tracks } from '../../lib/spotify';
+import { removeTracks } from '../../lib/spotify';
 
 export default async function remove_track(
   req: NextApiRequest,
@@ -12,17 +12,15 @@ export default async function remove_track(
     return res.status(401).json({ error: 'Invalid session' });
   }
 
-  const { track_id, playlist_id } = req.body;
+  const { trackID, playlistID } = req.body;
 
-  if (!track_id || !playlist_id) {
-    return res
-      .status(400)
-      .json({ error: 'Missing track_id and/or playlist_id' });
+  if (!trackID || !playlistID) {
+    return res.status(400).json({ error: 'Missing trackID and/or playlistID' });
   }
 
   try {
-    const snapshot_id = await remove_tracks(session.access_token, playlist_id, [
-      track_id,
+    const snapshot_id = await removeTracks(session.access_token, playlistID, [
+      trackID,
     ]);
   } catch (err) {
     return res.status(500).json({

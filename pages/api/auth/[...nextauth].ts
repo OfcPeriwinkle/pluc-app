@@ -1,4 +1,4 @@
-import { get_access_token } from '../../../lib/spotify';
+import { getAccessToken } from '../../../lib/spotify';
 import { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth/next';
 import SpotifyProvider from 'next-auth/providers/spotify';
@@ -36,8 +36,9 @@ const authOptions: AuthOptions = {
       }
 
       console.log('Refreshing access_token...');
-      const { access_token, expires_at, refresh_token } =
-        await get_access_token(token.refresh_token);
+      const { access_token, expires_at, refresh_token } = await getAccessToken(
+        token.refresh_token
+      );
 
       return {
         ...token,
