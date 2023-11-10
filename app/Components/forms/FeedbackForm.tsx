@@ -50,7 +50,7 @@ async function submitFeedback(
   message: string,
   playlistID: string
 ): Promise<boolean> {
-  const res = await fetch('/api/submitFeedback', {
+  const res = await fetch('/api/submit_feedback', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,7 +68,9 @@ async function submitFeedback(
   }
 
   if (!res.ok) {
-    alert('Error submitting feedback.');
+    let resJSON = await res.json();
+    alert(resJSON.error);
+
     return new Promise((resolve) => resolve(false));
   }
 

@@ -13,7 +13,7 @@ export default function PlaylistSearchResults({
       playlistID: playlist.id,
       playlistImageURL: playlist.images[0].url,
       playlistName: playlist.name,
-      displayName: playlist.owner.displayName ?? 'No Name',
+      displayName: playlist.owner.display_name ?? 'No Name',
       ownerID: playlist.owner.id,
     };
   });
