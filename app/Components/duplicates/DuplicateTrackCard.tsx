@@ -18,7 +18,7 @@ export default function DuplicateTrackCard({ track }: { track: Track }) {
 
   if (matchingTracks.length >= 1) {
     const playlistTrack = matchingTracks[0];
-    date = playlistTrack.addedAt ? new Date(playlistTrack.addedAt) : null;
+    date = playlistTrack.added_at ? new Date(playlistTrack.added_at) : null;
   }
 
   function handleClick() {
