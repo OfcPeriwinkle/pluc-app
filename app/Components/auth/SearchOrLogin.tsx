@@ -31,8 +31,8 @@ export default function SearchOrLogin() {
       }}
     >
       <DuplicatesModal
-        is_visible={modalVisible}
-        set_visibility={setModalVisible}
+        isVisible={modalVisible}
+        setVisibility={setModalVisible}
       />
       {!modalVisible && <Search />}
     </PlaylistContext.Provider>

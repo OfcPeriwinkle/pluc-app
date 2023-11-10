@@ -1,6 +1,6 @@
 'use client';
 
-import get_duplicates, {
+import getDuplicates, {
   SimplifiedArtistWithDuplicates,
 } from '../../../lib/pluc_duplicates';
 import { ArtistWithDuplicates } from '../../../lib/pluc_duplicates';
@@ -13,13 +13,13 @@ import FeedbackModal from '../overlays/FeedbackModal';
 import { TrackRemovalContext } from '../../Contexts/TrackRemovalContext';
 import RemoveModal from '../overlays/RemoveModal';
 
-async function merge_artist_details(
-  artist_duplicates: SimplifiedArtistWithDuplicates[]
+async function mergeArtistDetails(
+  artistDuplicates: SimplifiedArtistWithDuplicates[]
 ) {
-  const artist_ids = artist_duplicates.map(({ artist_id }) => artist_id);
+  const artistIDs = artistDuplicates.map(({ artistID }) => artistID);
 
   const res = await fetch(
-    `/api/artist_details?${new URLSearchParams({ q: artist_ids.join(',') })}`
+    `/api/artist_details?${new URLSearchParams({ q: artistIDs.join(',') })}`
   );
 
   if (!res.ok) {
@@ -29,30 +29,30 @@ async function merge_artist_details(
 
   const { artists } = await res.json();
 
-  const artist_with_duplicates = artist_duplicates.map(
-    ({ tracks_with_duplicates, total_duplicates }, idx) => {
+  const artistWithDuplicates = artistDuplicates.map(
+    ({ tracksWithDuplicates, totalDuplicates }, idx) => {
       return {
         artist: {
           name: artists[idx].name,
           image: artists[idx].images.length ? artists[idx].images[0].url : null,
         },
-        tracks_with_duplicates,
-        total_duplicates,
+        tracksWithDuplicates,
+        totalDuplicates,
       };
     }
   );
 
   return new Promise<ArtistWithDuplicates[]>((resolve) =>
-    resolve(artist_with_duplicates)
+    resolve(artistWithDuplicates)
   );
 }
 
 export default function DuplicatesModal({
-  is_visible,
-  set_visibility,
+  isVisible,
+  setVisibility,
 }: {
-  is_visible: Boolean;
-  set_visibility: Function;
+  isVisible: Boolean;
+  setVisibility: Function;
 }) {
   const { tracks } = useContext(PlaylistContext);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -65,28 +65,28 @@ export default function DuplicatesModal({
   // Update the duplicate results when the tracks change, this update logic might make sense in
   // a less "side-effecty" way in the future
   useEffect(() => {
-    const artist_duplicates = get_duplicates(tracks);
+    const artistDuplicates = getDuplicates(tracks);
 
-    if (!artist_duplicates.length) {
+    if (!artistDuplicates.length) {
       setDuplicateResults([]);
-      set_visibility(tracks.length > 0);
+      setVisibility(tracks.length > 0);
       return;
     }
 
-    merge_artist_details(artist_duplicates).then((artist_with_duplicates) => {
-      if (!artist_with_duplicates) return;
+    mergeArtistDetails(artistDuplicates).then((artistWithDuplicates) => {
+      if (!artistWithDuplicates) return;
 
-      setDuplicateResults(artist_with_duplicates);
-      set_visibility(tracks.length > 0);
+      setDuplicateResults(artistWithDuplicates);
+      setVisibility(tracks.length > 0);
     });
   }, [tracks]);
 
   // Handle the back button
-  function handle_click() {
-    set_visibility(false);
+  function handleClick() {
+    setVisibility(false);
   }
 
-  if (!is_visible) {
+  if (!isVisible) {
     return <></>;
   }
 
@@ -106,7 +106,7 @@ export default function DuplicatesModal({
             name="back"
             type="button"
             className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-light bg-opacity-10 transition duration-200 ease-in-out hover:bg-opacity-50 sm:h-10 sm:w-10"
-            onClick={handle_click}
+            onClick={handleClick}
           >
             <ArrowLeftIcon className="h-10 w-10 sm:h-6 sm:w-6" />
           </button>
@@ -124,14 +124,14 @@ export default function DuplicatesModal({
         </nav>
         {duplicateResults.length ? (
           duplicateResults.map(
-            ({ artist, tracks_with_duplicates, total_duplicates }, idx) => {
+            ({ artist, tracksWithDuplicates, totalDuplicates }, idx) => {
               return (
                 <ArtistDuplicates
                   key={idx}
-                  artist_name={artist.name}
-                  artist_image={artist.image}
-                  tracks_with_duplicates={tracks_with_duplicates}
-                  total_duplicates={total_duplicates}
+                  artistName={artist.name}
+                  artistImage={artist.image}
+                  tracksWithDuplicates={tracksWithDuplicates}
+                  totalDuplicates={totalDuplicates}
                 />
               );
             }

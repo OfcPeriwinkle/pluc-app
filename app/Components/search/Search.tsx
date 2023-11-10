@@ -9,11 +9,11 @@ interface PlaylistSearchResults {
   playlists: { items: SimplifiedPlaylist[] };
 }
 
-/** Contact pluc's API to search for a playlist_name */
-async function playlist_search(
-  playlist_name: string
+/** Contact pluc's API to search for a playlistName */
+async function playlistSearch(
+  playlistName: string
 ): Promise<PlaylistSearchResults | null> {
-  const res = await fetch(`/api/playlist_search?q=${playlist_name}`);
+  const res = await fetch(`/api/playlist_search?q=${playlistName}`);
 
   if (res.status !== 200) {
     return null;
@@ -26,20 +26,20 @@ export default function Search() {
   const [playlist, setPlaylist] = useState('');
   const { searchResults, setSearchResults } = useContext(PlaylistContext);
 
-  async function handle_enter(e: React.KeyboardEvent<HTMLInputElement>) {
+  async function handleEnter(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key !== 'Enter') {
       return;
     }
 
-    const search_results = await playlist_search(playlist);
+    const searchResults = await playlistSearch(playlist);
 
-    if (!search_results) {
+    if (!searchResults) {
       alert(`Error searching for playlist ${playlist}`);
       return;
     }
 
     // Get list of playlists and use them to set the React state
-    setSearchResults(search_results.playlists.items);
+    setSearchResults(searchResults.playlists.items);
   }
 
   return (
@@ -53,7 +53,7 @@ export default function Search() {
           onChange={(e) => {
             setPlaylist(e.target.value);
           }}
-          onKeyDown={handle_enter}
+          onKeyDown={handleEnter}
         />
       </div>
       {searchResults.length > 0 && (

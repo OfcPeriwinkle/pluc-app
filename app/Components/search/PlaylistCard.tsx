@@ -4,56 +4,54 @@ import { useContext } from 'react';
 import { PlaylistTrack } from 'spotify-types';
 
 export interface PlaylistCardProps {
-  playlist_id: string;
-  playlist_image_url: string;
-  playlist_name: string;
-  owner_display_name: string;
-  owner_id: string;
+  playlistID: string;
+  playlistImageURL: string;
+  playlistName: string;
+  ownerDisplayName: string;
+  ownerID: string;
 }
 
 export default function PlaylistCard({
-  playlist_id,
-  playlist_image_url,
-  playlist_name,
-  owner_display_name,
-  owner_id,
+  playlistID,
+  playlistImageURL,
+  playlistName,
+  ownerDisplayName,
+  ownerID,
 }: PlaylistCardProps) {
   const { setPlaylistID, setTracks, setOwnerID } = useContext(PlaylistContext);
 
-  async function handle_click() {
-    const res = await fetch(`/api/playlist_tracks?id=${playlist_id}`);
+  async function handleClick() {
+    const res = await fetch(`/api/playlist_tracks?id=${playlistID}`);
 
     if (!res.ok) {
       return null;
     }
 
-    const playlist_tracks = (await res.json()) as PlaylistTrack[];
-    setTracks(playlist_tracks);
-    setPlaylistID(playlist_id);
-    setOwnerID(owner_id);
+    const playlistTracks = (await res.json()) as PlaylistTrack[];
+    setTracks(playlistTracks);
+    setPlaylistID(playlistID);
+    setOwnerID(ownerID);
   }
 
   return (
     <div>
       <button
         className="flex w-52 flex-col items-center justify-center rounded-lg bg-gray-light bg-opacity-5 p-4 transition duration-200 ease-in-out hover:bg-opacity-25 focus:scale-95 focus:bg-opacity-25"
-        name={`${playlist_name} by ${owner_display_name}`}
+        name={`${playlistName} by ${ownerDisplayName}`}
         type="button"
-        onClick={handle_click}
+        onClick={handleClick}
       >
         <Image
           unoptimized
-          src={playlist_image_url}
+          src={playlistImageURL}
           width={160}
           height={160}
           alt="Playlist Image"
           className="h-44 w-44 object-cover"
         />
         <section className="mt-2 w-full truncate text-start">
-          <h3 className="w-full truncate font-semibold">{playlist_name}</h3>
-          <p className="w-full truncate text-gray-light">
-            {owner_display_name}
-          </p>
+          <h3 className="w-full truncate font-semibold">{playlistName}</h3>
+          <p className="w-full truncate text-gray-light">{ownerDisplayName}</p>
         </section>
       </button>
     </div>

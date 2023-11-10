@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import { MongoClient } from 'mongodb';
 
-export default async function submit_feedback(
+export default async function submitFeedback(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -13,16 +13,16 @@ export default async function submit_feedback(
     return res.status(401).json({ error: 'Invalid session' });
   }
 
-  const { thumbs_up, message, playlist_id } = req.body;
+  const { thumbsUp, message, playlistID } = req.body;
 
   if (
-    thumbs_up == undefined ||
+    thumbsUp == undefined ||
     message == undefined ||
-    playlist_id == undefined
+    playlistID == undefined
   ) {
     return res.status(400).json({
       error:
-        'Invalid feedback recieved, must have thumbs_up, message, and playlist_id',
+        'Invalid feedback recieved, must have thumbsUp, message, and playlistID',
     });
   }
 
@@ -51,7 +51,7 @@ export default async function submit_feedback(
     // Check if user already submitted feedback for this playlist
     const existing_feedback = await collection.findOne({
       user_id: String(session.user?.name),
-      playlist_id: String(playlist_id),
+      playlist_id: String(playlistID),
     });
 
     if (existing_feedback) {
@@ -65,8 +65,8 @@ export default async function submit_feedback(
       pluc_version: String(process.env.PLUC_VERSION),
       timestamp: new Date(),
       user_id: String(session.user?.name),
-      playlist_id: String(playlist_id),
-      thumbs_up: Boolean(thumbs_up),
+      playlist_id: String(playlistID),
+      thumbs_up: Boolean(thumbsUp),
       message: String(message),
     });
   } catch (err) {

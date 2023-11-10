@@ -15,9 +15,9 @@ export const PlaylistContext = createContext<{
   setSearchResults: Function;
 }>({
   playlistID: '',
-  setPlaylistID: (playlist_id: string) => {},
+  setPlaylistID: (playlistID: string) => {},
   ownerID: '',
-  setOwnerID: (owner_id: string) => {},
+  setOwnerID: (ownerID: string) => {},
   userID: '',
   tracks: [],
   setTracks: (tracks: Track[]) => {},

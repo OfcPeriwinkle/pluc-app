@@ -1,4 +1,4 @@
-import { get_artists } from '../../lib/spotify';
+import { getArtists } from '../../lib/spotify';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
@@ -23,7 +23,7 @@ export default async function handler(
   }
 
   // Search for playlist name
-  const artist_ids = artist_list.split(',');
-  const search_results = await get_artists(session.access_token, artist_ids);
-  return res.status(200).json({ artists: search_results });
+  const artistIDs = artist_list.split(',');
+  const searchResults = await getArtists(session.access_token, artistIDs);
+  return res.status(200).json({ artists: searchResults });
 }

@@ -40,15 +40,15 @@ interface FeedbackFormEvent extends FormEvent {
 
 /*
  * Handles the submission of feedback to the server.
- * @param thumbs_up - Thumbs up or thumbs down
+ * @param thumbsUp - Thumbs up or thumbs down
  * @param message - Optional feedback message
- * @param playlist_id - ID of the playlist being rated
+ * @param playlistID - ID of the playlist being rated
  * @returns boolean - Whether the submission was successful
  */
-async function submit_feedback(
-  thumbs_up: Thumbs,
+async function submitFeedback(
+  thumbsUp: Thumbs,
   message: string,
-  playlist_id: string
+  playlistID: string
 ): Promise<boolean> {
   const res = await fetch('/api/submit_feedback', {
     method: 'POST',
@@ -56,9 +56,9 @@ async function submit_feedback(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      thumbs_up,
+      thumbsUp,
       message,
-      playlist_id,
+      playlistID,
     }),
   });
 
@@ -68,7 +68,9 @@ async function submit_feedback(
   }
 
   if (!res.ok) {
-    alert('Error submitting feedback.');
+    let resJSON = await res.json();
+    alert(resJSON.error);
+
     return new Promise((resolve) => resolve(false));
   }
 
@@ -78,22 +80,22 @@ async function submit_feedback(
 
 /*
  * Form for submitting feedback.
- * @param textarea_ref - Reference for dialog initial focus
+ * @param textareaRef - Reference for dialog initial focus
  * @param setOpen - Function to set the open state of the modal
  * @returns JSX.Element - Feedback form
  */
 export default function FeedbackForm({
-  textarea_ref,
+  textareaRef,
   setOpen,
 }: {
-  textarea_ref: RefObject<HTMLTextAreaElement>;
+  textareaRef: RefObject<HTMLTextAreaElement>;
   setOpen: Function;
 }) {
   const [thumbs, setThumbs] = useState(Thumbs.NONE);
   const [charCount, setCharCount] = useState(0);
   const { playlistID } = useContext(PlaylistContext);
 
-  async function on_submit(e: FeedbackFormEvent) {
+  async function onSubmit(e: FeedbackFormEvent) {
     e.preventDefault();
 
     if (thumbs == Thumbs.NONE) {
@@ -106,7 +108,7 @@ export default function FeedbackForm({
       return;
     }
 
-    const res = await submit_feedback(
+    const res = await submitFeedback(
       thumbs,
       e.target.message.value,
       playlistID
@@ -123,7 +125,7 @@ export default function FeedbackForm({
       className="mt-4"
       method="post"
       // TODO: This is a hack to appease type checks
-      onSubmit={(e: FormEvent) => on_submit(e as FeedbackFormEvent)}
+      onSubmit={(e: FormEvent) => onSubmit(e as FeedbackFormEvent)}
     >
       <div className="flex w-full items-center justify-center gap-4">
         <button
@@ -157,7 +159,7 @@ export default function FeedbackForm({
         }`}
         name="message"
         placeholder="Enter optional feedback message..."
-        ref={textarea_ref}
+        ref={textareaRef}
         onChange={(e) => setCharCount(e.target.value.length)}
       />
       <p
