@@ -1,23 +1,56 @@
-import SearchOrLogin from './Components/auth/SearchOrLogin';
+import { Link } from "@heroui/link";
+import { Snippet } from "@heroui/snippet";
+import { Code } from "@heroui/code";
+import { button as buttonStyles } from "@heroui/theme";
+
+import { siteConfig } from "@/config/site";
+import { title, subtitle } from "@/components/primitives";
+import { GithubIcon } from "@/components/icons";
 
 export default function Home() {
   return (
-    <main className="relative mx-auto max-w-5xl pt-20 sm:pt-24 lg:pt-32">
-      <div className="flex min-h-screen flex-col items-center justify-start px-4 sm:px-6 md:px-8">
-        <h1 className="text-center text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-          Keep the tunes, <span>pluc</span> the noise.
-        </h1>
-        <p className="mx-auto mt-6 max-w-3xl text-center text-lg font-medium text-gray-light">
-          If you love music, your playlists are a huge part of your day to day.
-          So why let them fill up with clutter?{' '}
-          <span>pluc keeps your playlists squeaky clean</span> by detecting
-          multiple versions of the same track that Spotify missed, letting you
-          share your favorite songs without the static.
-        </p>
-
-        {/* SearchOrLogin is a client component and not part of SSR */}
-        <SearchOrLogin />
+    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <div className="inline-block max-w-xl text-center justify-center">
+        <span className={title()}>Make&nbsp;</span>
+        <span className={title({ color: "violet" })}>beautiful&nbsp;</span>
+        <br />
+        <span className={title()}>
+          websites regardless of your design experience.
+        </span>
+        <div className={subtitle({ class: "mt-4" })}>
+          Beautiful, fast and modern React UI library.
+        </div>
       </div>
-    </main>
+
+      <div className="flex gap-3">
+        <Link
+          isExternal
+          className={buttonStyles({
+            color: "primary",
+            radius: "full",
+            variant: "shadow",
+          })}
+          href={siteConfig.links.docs}
+        >
+          Documentation
+        </Link>
+        <Link
+          isExternal
+          className={buttonStyles({ variant: "bordered", radius: "full" })}
+          href={siteConfig.links.github}
+        >
+          <GithubIcon size={20} />
+          GitHub
+        </Link>
+      </div>
+
+      <div className="mt-8">
+        <Snippet hideCopyButton hideSymbol variant="bordered">
+          <span>
+            Get started by editing <Code color="primary">app/page.tsx</Code>
+          </span>
+        </Snippet>
+      </div>
+    </section>
   );
 }
