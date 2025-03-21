@@ -25,7 +25,7 @@ const config = {
               DEFAULT: "#1ED760",
               foreground: "#000000",
             },
-            focus: "#1ED760",
+            focus: "#FFFFFF",
           },
         },
         light: {
@@ -34,7 +34,7 @@ const config = {
               DEFAULT: "#1ED760",
               foreground: "#FFFFFF",
             },
-            focus: "#1ED760",
+            focus: "#000000",
           },
         },
       },
