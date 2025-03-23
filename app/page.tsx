@@ -5,7 +5,9 @@ import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 
-export default function Home() {
+import { signIn } from "@/auth";
+
+export default async function Home() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-xl text-center justify-center">
@@ -18,17 +20,23 @@ export default function Home() {
       </div>
 
       <div className="flex gap-3">
-        <Link
-          isExternal
-          className={buttonStyles({
-            color: "primary",
-            radius: "full",
-            variant: "shadow",
-          })}
-          href={siteConfig.links.docs}
+        <form
+          action={async () => {
+            "use server";
+            await signIn("spotify");
+          }}
         >
-          Sign In with Spotify
-        </Link>
+          <button
+            className={buttonStyles({
+              color: "primary",
+              radius: "full",
+              variant: "shadow",
+            })}
+            type="submit"
+          >
+            Sign in with Spotify
+          </button>
+        </form>
         <Link
           isExternal
           className={buttonStyles({ variant: "bordered", radius: "full" })}

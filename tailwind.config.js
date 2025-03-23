@@ -22,7 +22,7 @@ const config = {
         dark: {
           colors: {
             primary: {
-              DEFAULT: "#1ED760",
+              DEFAULT: "#1DB954",
               foreground: "#000000",
             },
             focus: "#FFFFFF",
@@ -31,7 +31,7 @@ const config = {
         light: {
           colors: {
             primary: {
-              DEFAULT: "#1ED760",
+              DEFAULT: "#1DB954",
               foreground: "#FFFFFF",
             },
             focus: "#000000",
