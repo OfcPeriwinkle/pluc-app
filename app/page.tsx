@@ -15,7 +15,7 @@ export default async function Home() {
         <br />
         <span className={title({ color: "green" })}>pluc the noise.&nbsp;</span>
         <div className={subtitle({ class: "mt-4" })}>
-          Playlist utilities for Spotify
+          Playlist Utilities for Spotify
         </div>
       </div>
 
