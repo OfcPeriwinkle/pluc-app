@@ -5,9 +5,11 @@ import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 
-import { signIn } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 
 export default async function Home() {
+  const session = await auth();
+
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-xl text-center justify-center">
@@ -20,23 +22,43 @@ export default async function Home() {
       </div>
 
       <div className="flex gap-3">
-        <form
-          action={async () => {
-            "use server";
-            await signIn("spotify", { redirectTo: "/dashboard" });
-          }}
-        >
-          <button
-            className={buttonStyles({
-              color: "primary",
-              radius: "full",
-              variant: "shadow",
-            })}
-            type="submit"
+        {session ? (
+          <form
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/" });
+            }}
           >
-            Sign in with Spotify
-          </button>
-        </form>
+            <button
+              className={buttonStyles({
+                color: "primary",
+                radius: "full",
+                variant: "shadow",
+              })}
+              type="submit"
+            >
+              Sign Out
+            </button>
+          </form>
+        ) : (
+          <form
+            action={async () => {
+              "use server";
+              await signIn("spotify", { redirectTo: "/dashboard" });
+            }}
+          >
+            <button
+              className={buttonStyles({
+                color: "primary",
+                radius: "full",
+                variant: "shadow",
+              })}
+              type="submit"
+            >
+              Sign in with Spotify
+            </button>
+          </form>
+        )}
         <Link
           isExternal
           className={buttonStyles({ variant: "bordered", radius: "full" })}

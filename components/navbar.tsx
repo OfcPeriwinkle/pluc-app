@@ -17,16 +17,13 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  TwitterIcon,
-  GithubIcon,
-  DiscordIcon,
-  HeartFilledIcon,
-  SearchIcon,
-  Logo,
-} from "@/components/icons";
+import { GithubIcon, SearchIcon, Logo } from "@/components/icons";
 
-export const Navbar = () => {
+import { auth, signIn, signOut } from "@/auth";
+
+export const Navbar = async () => {
+  const session = await auth();
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -85,6 +82,18 @@ export const Navbar = () => {
           </Link>
           <ThemeSwitch />
         </NavbarItem>
+        {session ? (
+          <NavbarItem className="hidden sm:flex gap-2">
+            <form
+              action={async () => {
+                "use server";
+                await signOut({ redirectTo: "/" });
+              }}
+            >
+              <Button type="submit">Sign Out</Button>
+            </form>
+          </NavbarItem>
+        ) : null}
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
