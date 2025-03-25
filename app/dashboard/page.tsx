@@ -15,9 +15,9 @@ export default function Page() {
       </div>
 
       <ul className="flex flex-col items-center gap-4 md:grid md:grid-cols-3 md:gap-8 md:mt-8">
-        {playlistUtilities.map(({ title, description }) => (
+        {playlistUtilities.map(({ title, description, href }) => (
           <li key={title}>
-            <UtilityCard title={title} description={description} />
+            <UtilityCard title={title} description={description} href={href} />
           </li>
         ))}
       </ul>
