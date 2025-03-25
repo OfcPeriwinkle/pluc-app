@@ -1,8 +1,12 @@
+import { playlistUtilityLookup } from "@/config/utilities";
+
 export default function Page() {
+  const description = playlistUtilityLookup["Memory Lane"];
+
   return (
     <div>
       <h1>Memory Lane</h1>
-      <p>See how your playlist captures days gone by.</p>
+      <p>{description}</p>
     </div>
   );
 }

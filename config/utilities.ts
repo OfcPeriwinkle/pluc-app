@@ -20,7 +20,7 @@ export const playlistUtilities: PlaylistUtility[] = [
   },
   {
     title: "Memory Lane",
-    description: "See how your playlist captures days gone by.",
+    description: "See what your soundtrack was like in days gone by.",
     href: "/utilities/memory_lane",
   },
   {
@@ -29,3 +29,11 @@ export const playlistUtilities: PlaylistUtility[] = [
     href: "/utilities/seasonify",
   },
 ];
+
+export const playlistUtilityLookup = playlistUtilities.reduce(
+  (lookup, utility) => {
+    lookup[utility.title] = utility.description;
+    return lookup;
+  },
+  {} as Record<string, string>,
+);
